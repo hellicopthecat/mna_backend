@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "description": "Account & Material Management system of BeckEnd",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "compile": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon"
   },
   "repository": {
     "type": "git",
@@ -24,10 +23,17 @@
   "homepage": "https://github.com/hellicopthecat/mna_backend#readme",
   "dependencies": {
     "@apollo/server": "^4.10.2",
-    "graphql": "^16.8.1"
+    "@graphql-tools/load-files": "^7.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.1",
+    "graphql": "^16.8.1",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/node": "^20.11.30",
+    "prisma": "^5.11.0",
     "typescript": "^5.4.3"
   }
 }
