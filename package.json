@@ -1,0 +1,33 @@
+{
+  "name": "mna_back",
+  "version": "1.0.0",
+  "description": "Account & Material Management system of BeckEnd",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "compile": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hellicopthecat/mna_backend.git"
+  },
+  "keywords": [
+    "Account",
+    "Material"
+  ],
+  "author": "Hellicat",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hellicopthecat/mna_backend/issues"
+  },
+  "homepage": "https://github.com/hellicopthecat/mna_backend#readme",
+  "dependencies": {
+    "@apollo/server": "^4.10.2",
+    "graphql": "^16.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "typescript": "^5.4.3"
+  }
+}
