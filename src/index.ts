@@ -1,7 +1,27 @@
 import {ApolloServer} from "@apollo/server";
-import {startStandaloneServer} from "@apollo/server/standalone";
+import {expressMiddleware} from "@apollo/server/express4";
+import express from "express";
+import cors from "cors";
+import http from "http";
+import {typeDefs, resolvers} from "./schema";
 
-const server = new ApolloServer({});
+const PORT = 4000;
+const app = express();
+const httpServer = http.createServer(app);
 
-const {url} = await startStandaloneServer(server, {listen: {port: 4000}});
-console.log(`Server is Listening on ${url}`);
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
+
+server.start().then(() => {
+  app.use(
+    "/graphql",
+    cors<cors.CorsRequest>(),
+    express.json(),
+    expressMiddleware(server)
+  );
+});
+httpServer.listen(PORT, () => {
+  console.log(`✅ Server is Listen http://localhost:${PORT}/graphql`);
+});
