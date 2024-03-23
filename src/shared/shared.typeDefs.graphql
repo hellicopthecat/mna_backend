@@ -1,0 +1,9 @@
+type MutationResponse {
+  ok: Boolean!
+  errorMsg: String
+}
+type loginMutationResponse {
+  ok: Boolean!
+  token: String!
+  errorMsg: String
+}
