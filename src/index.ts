@@ -4,14 +4,15 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import {typeDefs, resolvers} from "./schema";
+import {makeExecutableSchema} from "@graphql-tools/schema";
 
 const PORT = 4000;
+const schema = makeExecutableSchema({typeDefs, resolvers});
 const app = express();
 const httpServer = http.createServer(app);
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  schema,
 });
 
 server.start().then(() => {
