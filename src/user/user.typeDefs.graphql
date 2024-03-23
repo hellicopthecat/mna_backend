@@ -1,0 +1,9 @@
+type User {
+  id: String!
+  updateAt: String!
+  createdAt: String!
+  username: String!
+  password: String!
+  email: String
+  companyName: String
+}
