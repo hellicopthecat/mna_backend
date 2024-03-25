@@ -1,0 +1,11 @@
+type Company {
+  id: String!
+  createAt: String!
+  updateAt: String!
+  companyName: String!
+  isOwned: Boolean!
+  isManager: Boolean!
+  companyOwner: String!
+  companyManager: [User!]
+  capitalStock: Int
+}
