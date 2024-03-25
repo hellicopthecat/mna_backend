@@ -2,8 +2,11 @@ type User {
   id: String!
   updateAt: String!
   createdAt: String!
+  firstName: String
+  lastName: String
   username: String!
-  password: String!
-  email: String
+  email: String!
+  companyId: Int
   companyName: String
+  myCompany: Company
 }
