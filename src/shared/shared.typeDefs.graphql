@@ -4,6 +4,6 @@ type MutationResponse {
 }
 type loginMutationResponse {
   ok: Boolean!
-  token: String!
+  token: String
   errorMsg: String
 }
