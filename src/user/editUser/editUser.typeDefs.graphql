@@ -1,0 +1,7 @@
+type Mutation {
+  editUser(
+    firstName: String
+    lastName: String
+    password: String
+  ): MutationResponse!
+}
