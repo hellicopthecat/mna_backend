@@ -1,4 +1,4 @@
 {
-  "exec": "ts-node src/index.ts -delay 2",
+  "exec": "ts-node ./src/index.ts -delay 3",
   "ext": "ts,tsx"
 }
