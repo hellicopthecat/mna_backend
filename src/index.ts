@@ -3,8 +3,10 @@ import {expressMiddleware} from "@apollo/server/express4";
 import express from "express";
 import cors from "cors";
 import http from "http";
+import morgan from "morgan";
 import {typeDefs, resolvers} from "./schema";
 import {makeExecutableSchema} from "@graphql-tools/schema";
+import {getUser} from "./user/user.util";
 
 const PORT = 4000;
 const schema = makeExecutableSchema({typeDefs, resolvers});
@@ -18,9 +20,14 @@ const server = new ApolloServer({
 server.start().then(() => {
   app.use(
     "/graphql",
-    cors<cors.CorsRequest>(),
+    cors<cors.CorsRequest>({exposedHeaders: ["Apollo-Require-Preflight"]}),
     express.json(),
-    expressMiddleware(server)
+    morgan("tiny"),
+    expressMiddleware(server, {
+      context: async ({req}) => ({
+        logginUser: await getUser(req.headers.token),
+      }),
+    })
   );
 });
 httpServer.listen(PORT, () => {
