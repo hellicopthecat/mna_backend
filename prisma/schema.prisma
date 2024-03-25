@@ -21,6 +21,20 @@ model User {
   lastName    String
   username    String   @unique
   password    String
-  email       String?  @unique
+  email       String   @unique
   companyName String?
+  company     Company? @relation(fields: [companyId], references: [id])
+  companyId   Int?
+}
+
+model Company {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updateAt       DateTime @updatedAt
+  companyName    String
+  isOwned        Boolean
+  isManager      Boolean
+  companyOwner   String
+  companyManager User[]
+  capitalStock   Int?
 }
