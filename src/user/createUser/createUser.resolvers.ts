@@ -1,21 +1,28 @@
 import bcrypt from "bcrypt";
 import {User} from "@prisma/client";
 import client from "../../prismaClient";
+import {Resolvers} from "../../types";
 
 export default {
   Mutation: {
     createUser: async (
-      _: any,
-      {username, password, firstName, lastName, email, companyName}: User
+      _,
+      {username, password, firstName, lastName, email}: User
     ) => {
       try {
         const existsUser = await client.user.findFirst({
           where: {OR: [{username}, {email}]},
         });
-        if (existsUser) {
+        if (existsUser.username === username) {
           return {
             ok: false,
             errorMsg: "사용되고 있는 유저이름입니다.",
+          };
+        }
+        if (existsUser.email === email) {
+          return {
+            ok: false,
+            errorMsg: "사용되고 있는 이메일입니다.",
           };
         }
         if (password.length < 3) {
@@ -32,7 +39,6 @@ export default {
             firstName,
             lastName,
             email,
-            companyName,
           },
         });
         return {
@@ -43,4 +49,4 @@ export default {
       }
     },
   },
-};
+} as Resolvers;

@@ -4,7 +4,6 @@ type Mutation {
     password: String!
     firstName: String!
     lastName: String!
-    email: String
-    companyName: String
+    email: String!
   ): MutationResponse!
 }
