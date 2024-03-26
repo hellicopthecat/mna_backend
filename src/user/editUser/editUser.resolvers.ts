@@ -7,8 +7,8 @@ export default {
   Mutation: {
     editUser: protectResolver(
       async (_, {firstName, lastName, password}: User, {logginUser}) => {
-        let newHashPw = null;
-        if (password.length < 3) {
+        let newHashPw: string;
+        if (password?.length < 3) {
           return {
             ok: false,
             errorMsg: "3자 이상으로 작성해야합니다.",

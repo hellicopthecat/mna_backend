@@ -1,12 +1,13 @@
 type User {
   id: String!
-  updateAt: String!
   createdAt: String!
+  updateAt: String!
   firstName: String
   lastName: String
   username: String!
   email: String!
-  companyId: Int
-  companyName: String
-  myCompany: Company
+  isOwner: Boolean!
+  isAdmin: Boolean!
+  isManager: [String]!
+  company: [Company]!
 }

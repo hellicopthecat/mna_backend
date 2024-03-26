@@ -1,3 +1,3 @@
 type Query {
-  searchUsers(username: String): [User]!
+  searchUsers(username: String!): [User]!
 }

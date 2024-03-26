@@ -1,24 +1,46 @@
-import {Company, User} from "@prisma/client";
 import {Resolvers} from "../types";
 import client from "../prismaClient";
 
 export default {
   User: {
-    companyId: async (_, __, {logginUser}) => {
-      const company = await client.company.findFirst({
-        where: {id: logginUser.companyId},
+    isOwner: async (_, __, {logginUser}) => {
+      const {id: userID, username} = await client.user.findUnique({
+        where: {id: logginUser.id},
+        select: {id: true, username: true},
       });
-      return company.id;
+      const {id: companyOwnerId, companyOwner} = await client.company.findFirst(
+        {
+          where: {companyManager: {some: {id: userID}}},
+        }
+      );
+      const MATCH_ID = userID === companyOwnerId;
+      const MATCH_OWNER = username === companyOwner;
+      return MATCH_ID && MATCH_OWNER;
     },
-    companyName: async (_, __, {logginUser}) => {
-      const company = await client.company.findFirst({
-        where: {companyManager: {some: {id: logginUser.id}}},
+    isAdmin: async (_, __, {logginUser}) => {
+      const {id: userID} = await client.user.findUnique({
+        where: {id: logginUser.id},
+        select: {id: true},
       });
-      return company.companyName;
+      const {id: companyOwnerId} = await client.company.findFirst({
+        where: {companyManager: {some: {id: userID}}},
+      });
+      const MATCH_ID = userID === companyOwnerId;
+      return MATCH_ID;
     },
-
-    myCompany: (_, __, {logginUser}) =>
-      client.company.findFirst({
+    isManager: async (_, __, {logginUser}) =>
+      await client.company.findMany({
+        where: {
+          companyManager: {
+            some: {id: logginUser.id},
+          },
+        },
+        select: {
+          companyName: true,
+        },
+      }),
+    company: (_, __, {logginUser}) =>
+      client.company.findMany({
         where: {
           companyManager: {
             some: {id: logginUser.id},
