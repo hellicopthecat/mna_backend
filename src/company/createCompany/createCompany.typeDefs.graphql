@@ -1,7 +1,4 @@
 type Mutation {
-  createCompany(
-    companyName: String!
-    companyOwner: String!
-    capitalStock: Int
-  ): MutationResponse!
+  createCompany(companyName: String!, capitalStock: Int): MutationResponse!
 }
+#

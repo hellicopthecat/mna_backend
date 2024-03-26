@@ -3,9 +3,7 @@ type Company {
   createAt: String!
   updateAt: String!
   companyName: String!
-  isOwned: Boolean!
-  isManager: Boolean!
   companyOwner: String!
-  companyManager: [User!]
+  companyManager: [User]!
   capitalStock: Int
 }
