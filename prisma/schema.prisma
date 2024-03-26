@@ -14,17 +14,27 @@ datasource db {
 }
 
 model User {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updateAt   DateTime  @updatedAt
+  firstName  String?
+  lastName   String?
+  username   String    @unique
+  password   String
+  email      String    @unique
+  isOwner    Boolean   @default(false)
+  isAdmin    Boolean   @default(false)
+  isManaging Manage[]  @relation("manage")
+  company    Company[]
+}
+
+model Manage {
   id          Int      @id @default(autoincrement())
   createdAt   DateTime @default(now())
   updateAt    DateTime @updatedAt
-  firstName   String
-  lastName    String
-  username    String   @unique
-  password    String
-  email       String   @unique
-  companyName String?
-  company     Company? @relation(fields: [companyId], references: [id])
-  companyId   Int?
+  companyId   Int
+  companyName String
+  User        User[]   @relation("manage")
 }
 
 model Company {
@@ -32,8 +42,6 @@ model Company {
   createdAt      DateTime @default(now())
   updateAt       DateTime @updatedAt
   companyName    String
-  isOwned        Boolean
-  isManager      Boolean
   companyOwner   String
   companyManager User[]
   capitalStock   Int?
