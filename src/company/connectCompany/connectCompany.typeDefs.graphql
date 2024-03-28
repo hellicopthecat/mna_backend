@@ -1,0 +1,3 @@
+type Mutation {
+  connectCompany(companyName: String!, targetCompany: String!): ResultResponse!
+}
