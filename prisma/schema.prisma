@@ -17,32 +17,39 @@ model User {
   id         Int       @id @default(autoincrement())
   createdAt  DateTime  @default(now())
   updateAt   DateTime  @updatedAt
+  username   String    @unique
+  email      String    @unique
+  password   String
   firstName  String?
   lastName   String?
-  username   String    @unique
-  password   String
-  email      String    @unique
-  isOwner    Boolean   @default(false)
-  isAdmin    Boolean   @default(false)
-  isManaging Manage[]  @relation("manage")
-  company    Company[]
-}
-
-model Manage {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updateAt    DateTime @updatedAt
-  companyId   Int
-  companyName String
-  User        User[]   @relation("manage")
+  avatar     String?
+  ownCompany Company[] @relation(name: "OwnedBy")
+  isManage   Company[]
 }
 
 model Company {
-  id             Int      @id @default(autoincrement())
-  createdAt      DateTime @default(now())
-  updateAt       DateTime @updatedAt
-  companyName    String
-  companyOwner   String
-  companyManager User[]
-  capitalStock   Int?
+  id                Int            @id @default(autoincrement())
+  createdAt         DateTime       @default(now())
+  updateAt          DateTime       @updatedAt
+  companyName       String         @unique
+  companyOwner      User           @relation(name: "OwnedBy", fields: [userId], references: [id])
+  companyAdress     ComapnyAdress? @relation(fields: [comapnyAdressId], references: [id])
+  companyManager    User[]
+  connectedCompany  Company[]      @relation("connectComapny")
+  connectingCompany Company[]      @relation("connectComapny")
+
+  userId          Int
+  comapnyAdressId Int
+}
+
+model ComapnyAdress {
+  id           Int       @id @default(autoincrement())
+  createdAt    DateTime  @default(now())
+  updateAt     DateTime  @updatedAt
+  country      String?
+  city         String?
+  streetAdress String?
+  restAdress   String?
+  adressNum    String?
+  Company      Company[]
 }
