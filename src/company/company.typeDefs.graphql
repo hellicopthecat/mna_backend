@@ -3,7 +3,25 @@ type Company {
   createAt: String!
   updateAt: String!
   companyName: String!
-  companyOwner: String!
+  companyOwner: User!
+  companyAdress: CompanyAdress
+  # computed
+  isOwned: Boolean!
+  isManger: Boolean!
   companyManager: [User]!
-  capitalStock: Int
+  connectedCompany: [Company]
+  connectedCompanyCount: Int!
+  connectingCompany: [Company]
+  connectingCompanyCount: Int!
+}
+
+type CompanyAdress {
+  id: String!
+  createdAt: String!
+  updateAt: String!
+  country: String
+  city: String
+  streetAdress: String
+  restAdress: String
+  adressNum: String
 }

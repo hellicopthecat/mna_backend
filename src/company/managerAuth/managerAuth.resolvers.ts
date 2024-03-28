@@ -1,61 +1,50 @@
-import {Manage, User} from "@prisma/client";
+import {Company, User} from "@prisma/client";
 import {protectResolver} from "../../user/user.util";
 import client from "../../prismaClient";
 
 export default {
   Mutation: {
     managerAuth: protectResolver(
-      async (_, {username, companyId}: User & Manage, {logginUser}) => {
+      async (_, {username, companyName}: User & Company, {logginUser}) => {
         try {
-          const adminUser = await client.user.findUnique({
-            where: {id: logginUser.id},
-            select: {
-              isOwner: true,
-              isManaging: true,
-            },
+          //find User
+          const existsUser = await client.user.findFirst({where: {username}});
+          if (!existsUser) {
+            return {ok: false, errorMsg: "유저가 없습니다."};
+          }
+          //target Company
+          const targetCompany = await client.company.findUnique({
+            where: {companyName},
           });
-          if (!adminUser.isOwner) {
-            return {
-              ok: false,
-              errorMsg: "관리자권한이 없습니다.",
-            };
+          if (!targetCompany) {
+            return {ok: false, errorMsg: "등록된 회사가 존재하지 않습니다."};
+          }
+          //companyManager
+          const companyManagers = await client.company.findFirst({
+            where: {companyName},
+            select: {companyManager: {select: {id: true}}},
+          });
+          const managerid = companyManagers.companyManager.find(
+            (item) => item.id === logginUser.id
+          );
+
+          if (managerid.id !== logginUser.id) {
+            return {ok: false, errorMsg: "권한이 없습니다."};
           }
 
-          const worker = await client.user.findFirstOrThrow({
-            where: {username},
-          });
-          if (!worker) {
-            return {
-              ok: false,
-              errorMsg: "유저가 존재하지 않습니다.",
-            };
-          }
-          const {id: managingId} = await client.manage.findFirst({
-            where: {companyId},
-          });
-          const updateWorker = await client.user.update({
-            where: {username: worker.username},
-            data: {
-              isAdmin: true,
-              isManaging: {connect: {id: managingId}},
-            },
-          });
+          //update Company
           const updateCompany = await client.company.update({
-            where: {id: companyId},
+            where: {companyName},
             data: {
-              companyManager: {connect: {id: worker.id}},
+              companyManager: {connect: {id: existsUser.id}},
             },
           });
-          if (!updateWorker && !updateCompany) {
-            return {
-              ok: false,
-              errorMsg: "권한부여 중 에러가 났습니다.",
-            };
-          } else {
-            return {
-              ok: true,
-            };
+          if (!updateCompany) {
+            return {ok: false, errorMsg: "직원으로 등록할수없습니다."};
           }
+          return {
+            ok: true,
+          };
         } catch (err) {
           return err;
         }
