@@ -1,0 +1,6 @@
+type Mutation {
+  disconnectCompany(
+    companyName: String!
+    targetCompany: String!
+  ): ResultResponse!
+}
