@@ -1,7 +1,8 @@
 type Mutation {
   editUser(
+    password: String
     firstName: String
     lastName: String
-    password: String
-  ): MutationResponse!
+    avatar: String
+  ): ResultResponse!
 }

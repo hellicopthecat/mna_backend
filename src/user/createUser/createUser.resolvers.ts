@@ -7,7 +7,7 @@ export default {
   Mutation: {
     createUser: async (
       _,
-      {username, password, firstName, lastName, email}: User
+      {username, email, password, firstName, lastName}: User
     ) => {
       try {
         const existsUser = await client.user.findFirst({

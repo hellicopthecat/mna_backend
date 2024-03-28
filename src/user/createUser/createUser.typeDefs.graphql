@@ -1,9 +1,9 @@
 type Mutation {
   createUser(
     username: String!
-    password: String!
-    firstName: String!
-    lastName: String!
     email: String!
-  ): MutationResponse!
+    password: String!
+    firstName: String
+    lastName: String
+  ): ResultResponse!
 }

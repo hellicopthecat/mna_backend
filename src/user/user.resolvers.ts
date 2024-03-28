@@ -3,49 +3,35 @@ import client from "../prismaClient";
 
 export default {
   User: {
-    isOwner: async (_, __, {logginUser}) => {
-      const {id: userID, username} = await client.user.findUnique({
+    ownCompany: async (_, __, {logginUser}) => {
+      const myCompany = await client.user.findUnique({
         where: {id: logginUser.id},
-        select: {id: true, username: true},
+        select: {ownCompany: true},
       });
-      const {id: companyOwnerId, companyOwner} = await client.company.findFirst(
-        {
-          where: {companyManager: {some: {id: userID}}},
-        }
-      );
-      const MATCH_ID = userID === companyOwnerId;
-      const MATCH_OWNER = username === companyOwner;
-      return MATCH_ID && MATCH_OWNER;
+      return myCompany.ownCompany;
     },
-    isAdmin: async (_, __, {logginUser}) => {
-      const {id: userID} = await client.user.findUnique({
-        where: {id: logginUser.id},
-        select: {id: true},
-      });
-      const {id: companyOwnerId} = await client.company.findFirst({
-        where: {companyManager: {some: {id: userID}}},
-      });
-      const MATCH_ID = userID === companyOwnerId;
-      return MATCH_ID;
-    },
-    isManager: async (_, __, {logginUser}) =>
-      await client.company.findMany({
-        where: {
-          companyManager: {
-            some: {id: logginUser.id},
-          },
-        },
-        select: {
-          companyName: true,
-        },
-      }),
-    company: (_, __, {logginUser}) =>
-      client.company.findMany({
-        where: {
-          companyManager: {
-            some: {id: logginUser.id},
-          },
-        },
-      }),
+    // hasCompanyCount: async (_, __, {logginUser}) => {
+    //   const me = await client.user.findFirst({
+    //     where: {id: logginUser.id},
+    //     select: {ownCompany: true},
+    //   });
+    //   return me.ownCompany.length;
+    // },
+    // manageCompany: async (_, __, {logginUser}) => {
+    //   const company = await client.user.findFirst({
+    //     where: {id: logginUser.id},
+    //     select: {isManage: true},
+    //   });
+
+    //   return company.isManage;
+    // },
+    // manageCompanyCount: async (_, __, {logginUser}) => {
+    //   const company = await client.user.findFirst({
+    //     where: {id: logginUser.id},
+    //     select: {isManage: true},
+    //   });
+
+    //   return company.isManage.length;
+    // },
   },
 } as Resolvers;

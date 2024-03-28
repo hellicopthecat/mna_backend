@@ -2,12 +2,13 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import {User} from "@prisma/client";
 import client from "../../prismaClient";
+import {Resolvers} from "../../types";
 
 export default {
   Mutation: {
-    loginUser: async (_: any, {email, password}: User) => {
+    loginUser: async (_, {username, password}: User) => {
       try {
-        const existsUser = await client.user.findFirst({where: {email}});
+        const existsUser = await client.user.findFirst({where: {username}});
         if (!existsUser) {
           return {
             ok: false,
@@ -41,4 +42,4 @@ export default {
       }
     },
   },
-};
+} as Resolvers;
