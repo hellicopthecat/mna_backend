@@ -1,0 +1,10 @@
+type Mutation {
+  editCompanyAdress(
+    companyName: String
+    country: String
+    city: String
+    streetAdress: String
+    restAdress: String
+    adressNum: String
+  ): ResultResponse!
+}
