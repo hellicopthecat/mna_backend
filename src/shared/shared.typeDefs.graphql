@@ -1,8 +1,8 @@
-type MutationResponse {
+type ResultResponse {
   ok: Boolean!
   errorMsg: String
 }
-type loginMutationResponse {
+type LoginResultResponse {
   ok: Boolean!
   token: String
   errorMsg: String
