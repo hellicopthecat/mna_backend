@@ -1,37 +1,37 @@
 import {Resolvers} from "../types";
 import client from "../prismaClient";
+import {User} from "@prisma/client";
 
 export default {
   User: {
-    ownCompany: async (_, __, {logginUser}) => {
+    ownCompany: async ({id}: User) => {
       const myCompany = await client.user.findUnique({
-        where: {id: logginUser.id},
+        where: {id},
         select: {ownCompany: true},
       });
       return myCompany.ownCompany;
     },
-    // hasCompanyCount: async (_, __, {logginUser}) => {
-    //   const me = await client.user.findFirst({
-    //     where: {id: logginUser.id},
-    //     select: {ownCompany: true},
-    //   });
-    //   return me.ownCompany.length;
-    // },
-    // manageCompany: async (_, __, {logginUser}) => {
-    //   const company = await client.user.findFirst({
-    //     where: {id: logginUser.id},
-    //     select: {isManage: true},
-    //   });
+    hasCompanyCount: async ({id}: User) => {
+      const me = await client.user.findFirst({
+        where: {id},
+        select: {ownCompany: true},
+      });
+      return me.ownCompany.length;
+    },
+    manageCompany: async ({id}: User) => {
+      const company = await client.user.findFirst({
+        where: {id},
+        select: {isManage: true},
+      });
+      return company.isManage;
+    },
+    manageCompanyCount: async ({id}: User) => {
+      const company = await client.user.findFirst({
+        where: {id},
+        select: {isManage: true},
+      });
 
-    //   return company.isManage;
-    // },
-    // manageCompanyCount: async (_, __, {logginUser}) => {
-    //   const company = await client.user.findFirst({
-    //     where: {id: logginUser.id},
-    //     select: {isManage: true},
-    //   });
-
-    //   return company.isManage.length;
-    // },
+      return company.isManage.length;
+    },
   },
 } as Resolvers;
