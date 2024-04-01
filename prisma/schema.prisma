@@ -31,18 +31,19 @@ model Company {
   id                Int            @id @default(autoincrement())
   createdAt         DateTime       @default(now())
   updateAt          DateTime       @updatedAt
+  companyLogo       String?
   companyName       String         @unique
   companyOwner      User           @relation(name: "OwnedBy", fields: [userId], references: [id])
-  companyAdress     ComapnyAdress? @relation(fields: [comapnyAdressId], references: [id])
+  companyAdress     CompanyAdress? @relation(fields: [companyAdressId], references: [id])
   companyManager    User[]
   connectedCompany  Company[]      @relation("connectComapny")
   connectingCompany Company[]      @relation("connectComapny")
-
-  userId          Int
-  comapnyAdressId Int
+  companyProduct    Product[]
+  userId            Int
+  companyAdressId   Int
 }
 
-model ComapnyAdress {
+model CompanyAdress {
   id           Int       @id @default(autoincrement())
   createdAt    DateTime  @default(now())
   updateAt     DateTime  @updatedAt
@@ -52,4 +53,29 @@ model ComapnyAdress {
   restAdress   String?
   adressNum    String?
   Company      Company[]
+}
+
+enum ItemOrderNumber {
+  WAIT
+  ORDER
+  PRODUCE
+  SEND
+  COMPLETE
+}
+
+model Product {
+  id             Int             @id @default(autoincrement())
+  createdAt      DateTime        @default(now())
+  updateAt       DateTime        @updatedAt
+  company        Company         @relation(fields: [companyId], references: [id])
+  itemPhoto      String?
+  itemName       String          @unique
+  itemType       String?
+  itemCount      Int?
+  itemPrice      Int?
+  itemDesc       String?
+  deprecatedItem Boolean?        @default(false)
+  itemOrder      ItemOrderNumber @default(WAIT)
+  itemOrderDesc  String?
+  companyId      Int
 }
