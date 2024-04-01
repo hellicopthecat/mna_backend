@@ -1,0 +1,11 @@
+type CompanyAdress {
+  id: String!
+  createdAt: String!
+  updateAt: String!
+  country: String
+  city: String
+  streetAdress: String
+  restAdress: String
+  adressNum: String
+  company: [Company]
+}
