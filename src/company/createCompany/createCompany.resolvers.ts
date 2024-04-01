@@ -17,7 +17,7 @@ export default {
                 "이미 같은 이름의 회사가 존재합니다. 회사명을 좀 더 바꿔보세요",
             };
           }
-          const createCompanyAdress = await client.comapnyAdress.create({
+          const createCompanyAdress = await client.companyAdress.create({
             data: {
               country: "",
               city: "",

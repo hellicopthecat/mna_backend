@@ -2,6 +2,7 @@ type Company {
   id: String!
   createAt: String!
   updateAt: String!
+  companyLogo: String!
   companyName: String!
   companyOwner: User!
   companyAdress: CompanyAdress
@@ -13,15 +14,4 @@ type Company {
   connectedCompanyCount: Int!
   connectingCompany: [Company]
   connectingCompanyCount: Int!
-}
-
-type CompanyAdress {
-  id: String!
-  createdAt: String!
-  updateAt: String!
-  country: String
-  city: String
-  streetAdress: String
-  restAdress: String
-  adressNum: String
 }
