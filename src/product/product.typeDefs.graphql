@@ -1,0 +1,17 @@
+type Product {
+  id: Int!
+  createdAt: String!
+  updateAt: String!
+  company: Company!
+  itemProductId: String!
+  itemName: String!
+  itemModelName: String
+  itemPhoto: String
+  itemType: String
+  itemCount: Int
+  itemPrice: Int
+  itemDesc: String
+  incomeExpend: IncomeExpend!
+  incomeExpendTypeId: Int!
+  companyId: Int!
+}
