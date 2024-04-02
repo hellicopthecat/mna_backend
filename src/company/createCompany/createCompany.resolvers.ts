@@ -26,12 +26,16 @@ export default {
               adressNum: "",
             },
           });
+          const createCompanyAssets = await client.inNout.create({
+            data: {accountName: companyName},
+          });
           const createCompany = await client.company.create({
             data: {
               companyName,
               companyOwner: {connect: {id: logginUser.id}},
               companyAdress: {connect: {id: createCompanyAdress.id}},
               companyManager: {connect: {id: logginUser.id}},
+              inNout: {connect: {id: createCompanyAssets.id}},
             },
           });
           if (!createCompany) {
