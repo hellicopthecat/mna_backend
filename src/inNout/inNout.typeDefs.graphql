@@ -1,0 +1,13 @@
+type InNout {
+  id: Int!
+  createdAt: String!
+  updateAt: String!
+  capitalStock: Int!
+  budget: Int!
+  accountNum: String
+  accountName: String!
+  incomeModel: [IncomeExpend]
+  incomeMoney: Int
+  expendModel: [IncomeExpend]
+  expendMoney: Int
+}
