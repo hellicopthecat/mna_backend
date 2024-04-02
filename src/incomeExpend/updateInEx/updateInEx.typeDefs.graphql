@@ -1,0 +1,8 @@
+type Mutation {
+  updateInEx(
+    companyName: String!
+    infoSubtitle: String!
+    incomeTrue: Boolean
+    paymentsDone: Boolean
+  ): ResultResponse!
+}
