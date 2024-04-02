@@ -1,0 +1,12 @@
+type Mutation {
+  editProduct(
+    itemProductId: String!
+    itemModelName: String
+    itemName: String
+    itemPhoto: String
+    itemType: String
+    itemCount: Int
+    itemPrice: Int
+    itemDesc: String
+  ): ResultResponse!
+}
