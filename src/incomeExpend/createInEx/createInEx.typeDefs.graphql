@@ -1,0 +1,13 @@
+type Mutation {
+  createInEx(
+    companyName: String!
+    incomeTrue: Boolean!
+    infoSubtitle: String!
+    money: Int!
+    businessDate: String!
+    paymentType: String
+    accountCode: String
+    businessDesc: String
+    paymentsDone: Boolean!
+  ): ResultResponse!
+}
