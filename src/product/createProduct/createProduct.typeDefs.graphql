@@ -1,0 +1,13 @@
+type Mutation {
+  createProduct(
+    itemProductId: String!
+    itemName: String!
+    itemModelName: String
+    itemPhoto: String
+    itemType: String
+    itemCount: Int
+    itemPrice: Int
+    itemDesc: String
+    companyName: String!
+  ): ResultResponse!
+}
