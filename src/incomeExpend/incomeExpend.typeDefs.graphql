@@ -1,0 +1,17 @@
+type IncomeExpend {
+  id: Int!
+  createdAt: String!
+  updateAt: String!
+  productItem: Product
+  incomeTrue: Boolean!
+  infoSubtitle: String!
+  money: Int
+  businessDate: String
+  paymentType: String
+  accountSubject: String
+  businessDesc: String
+  paymentsDone: Boolean!
+  inNout: InNout
+  inNoutId: Int
+  productId: Int
+}
