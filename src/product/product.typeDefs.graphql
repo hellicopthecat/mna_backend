@@ -2,7 +2,6 @@ type Product {
   id: Int!
   createdAt: String!
   updateAt: String!
-  company: Company!
   itemProductId: String!
   itemName: String!
   itemModelName: String
@@ -11,6 +10,7 @@ type Product {
   itemCount: Int
   itemPrice: Int
   itemDesc: String
+  company: Company!
   incomeExpend: IncomeExpend!
   incomeExpendTypeId: Int!
   companyId: Int!
