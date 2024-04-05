@@ -28,12 +28,12 @@ model Company {
   companyLogo       String?
   companyName       String         @unique
   companyOwner      User           @relation(name: "OwnedBy", fields: [userId], references: [id])
-  companyAdress     CompanyAdress? @relation(fields: [companyAdressId], references: [id])
+  companyAdress     CompanyAdress? @relation(fields: [companyAdressId], references: [id], onDelete: Cascade)
   companyManager    User[]
   connectedCompany  Company[]      @relation("connectComapny") // 거래처
   connectingCompany Company[]      @relation("connectComapny") // 거래처
   companyProduct    Product[] // 회사 상품
-  inNout            InNout?        @relation(fields: [inNoutId], references: [id]) // 회계
+  inNout            InNout?        @relation(fields: [inNoutId], references: [id], onDelete: Cascade) // 회계
   userId            Int
   companyAdressId   Int
   inNoutId          Int
@@ -71,31 +71,54 @@ model Product {
 }
 
 model InNout {
-  id           Int            @id @default(autoincrement())
-  createdAt    DateTime       @default(now())
-  updateAt     DateTime       @updatedAt
-  capitalStock Int            @default(0) // 자본금
-  budget       Int            @default(0) // 예산
-  accountNum   String?        @unique // 거래계좌
-  accountName  String // 계좌별명
-  inNoutDesc   IncomeExpend[]
-  Company      Company[]
+  id          Int                 @id @default(autoincrement())
+  createdAt   DateTime            @default(now())
+  updateAt    DateTime            @updatedAt
+  accountNum  String?             @unique // 거래계좌번호
+  accountName String // 계좌별명
+  accountDesc String?
+  totalAssets EquityLiabilities[] // 자산 및 부채
+  budget      Int                 @default(0) // 예산
+  inNoutDesc  IncomeExpend[]      @relation(name: "InEx") // budget의 토대
+  Company     Company[]
+}
+
+// Equity and Liabilities
+model EquityLiabilities {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+  enLId     String   @unique
+  enLName   String // 자산 제목
+  enLType   String // 자산 유형
+  enLDesc   String? // 자산 설명
+  current   Boolean  @default(true) // 유동 / 비유동
+  assests   Boolean  @default(true) // 자산 / 부채
+  value     Int // 자산값
+  InNout    InNout?  @relation(fields: [inNoutId], references: [id])
+  inNoutId  Int?
+}
+
+enum TPaymentSwitch {
+  WAIT
+  PAID
+  NONPAID
 }
 
 model IncomeExpend {
-  id           Int      @id @default(autoincrement())
-  createdAt    DateTime @default(now())
-  updateAt     DateTime @updatedAt
-  productItem  Product? @relation(fields: [productId], references: [id])
-  incomeTrue   Boolean? @default(false) //수입지출타입
-  infoSubtitle String   @unique
-  money        Int? // 수익금
+  id           Int            @id @default(autoincrement())
+  createdAt    DateTime       @default(now())
+  updateAt     DateTime       @updatedAt
+  productItem  Product?       @relation(fields: [productId], references: [id])
+  incomeTrue   Boolean?       @default(true) //수입지출타입
+  infoSubtitle String         @unique
+  money        Int? // 수익지출금
   businessDate String? // 거래일
   paymentType  String? // 결제타입
   accountCode  String? // 계정과목
   businessDesc String? // 거래내용
-  paymentsDone Boolean  @default(false) // 결제완료
-  InNout       InNout?  @relation(fields: [inNoutId], references: [id])
+  paymentsDone TPaymentSwitch @default(WAIT) // 결제완료
+  InNout       InNout?        @relation(name: "InEx", fields: [inNoutId], references: [id], onDelete: Cascade)
   inNoutId     Int?
-  productId    Int
+  productId    Int?
 }
