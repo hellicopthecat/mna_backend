@@ -2,10 +2,31 @@ type InNout {
   id: Int!
   createdAt: String!
   updateAt: String!
-  capitalStock: Int!
-  budget: Int!
+  budget: Int! # 예산
   accountNum: String
   accountName: String!
+  accountDesc: String
+  #computed
+  totalAssets: Int! # 자산 및 부채 금액
+  totalAssetsDesc: [EquityLiabilities] # 자산 및 부채 내역
+  currentAssets: Int # 유동자산
+  currentAssetsDesc: [EquityLiabilities] # 유동자산내역
+  nonCurrentAssets: Int # 비유동자산
+  nonCurrentAssetsDesc: [EquityLiabilities] # 비유동자산내역
+  currentLiabilities: Int # 유동부채
+  currentLiabilitiesDesc: [EquityLiabilities] # 유동부채
+  nonCurrentLiabilities: Int # 비유동부채
+  nonCurrentLiabilitiesDesc: [EquityLiabilities] # 비유동부채내역
+  capital: Int! # 자본
+  liabilities: Int!
+  netAssets: Int! # 순자산
+  netIncome: Int! # 순이익
+  totalRevenue: Int! # 총수익
+  totalExpenses: Int! # 총비용
+  profitMargin: Float! # 이익률
+  equityRatio: Float! # 자기자본비율
+  debtRatio: Float! # 부채비율
+  roe: Float! # 자기자본회수기간
   incomeModel: [IncomeExpend]
   incomeMoney: Int
   expendModel: [IncomeExpend]
