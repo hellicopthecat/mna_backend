@@ -1,4 +1,4 @@
-import {Company, Product} from "@prisma/client";
+import {Company, IncomeExpend, Product} from "@prisma/client";
 import {Resolvers} from "../../types";
 import {protectResolver} from "../../user/user.util";
 import client from "../../prismaClient";
@@ -17,8 +17,13 @@ export default {
           itemCount,
           itemPrice,
           itemDesc,
+          incomeTrue,
+          paymentType,
+          accountCode,
+          businessDesc,
           companyName,
-        }: Product & Company,
+          paymentsDone,
+        }: Product & IncomeExpend & Company,
         {logginUser}
       ) => {
         const adminUser = await client.company.findFirst({
@@ -34,7 +39,26 @@ export default {
         if (!existsCompany) {
           return {ok: false, errorMsg: "회사가 존재하지 않습니다."};
         }
-
+        const existsProductId = await client.product.findUnique({
+          where: {itemProductId},
+        });
+        if (existsProductId) {
+          return {
+            ok: false,
+            errorMsg: "프로젝트아이디가 존재합니다.",
+          };
+        }
+        const createIncomeExpend = await client.incomeExpend.create({
+          data: {
+            infoSubtitle: itemProductId,
+            money: itemCount * itemPrice,
+            incomeTrue,
+            paymentType,
+            accountCode,
+            businessDesc,
+            paymentsDone,
+          },
+        });
         const createProduct = await client.product.create({
           data: {
             itemProductId,
@@ -48,17 +72,65 @@ export default {
             company: {connect: {companyName}},
           },
         });
-        const createIncomeExpend = await client.incomeExpend.create({
-          data: {
-            infoSubtitle: itemProductId,
-            productItem: {connect: {id: createProduct.id}},
-          },
-        });
+        let updateIncomeExpend: any;
+        const income = incomeTrue && paymentsDone === "PAID";
+        const expend = !incomeTrue && paymentsDone === "PAID";
+        const notPaid = paymentsDone !== "PAID";
+        if (income) {
+          updateIncomeExpend = await client.incomeExpend.update({
+            where: {id: createIncomeExpend.id},
+            data: {
+              productItem: {connect: {id: createProduct.id}},
+              InNout: {
+                connect: {id: existsCompany.inNoutId},
+                update: {
+                  budget: {
+                    increment: itemCount * itemPrice,
+                  },
+                },
+              },
+            },
+          });
+        } else if (expend) {
+          updateIncomeExpend = await client.incomeExpend.update({
+            where: {id: createIncomeExpend.id},
+            data: {
+              productItem: {connect: {id: createProduct.id}},
+              InNout: {
+                connect: {id: existsCompany.inNoutId},
+                update: {
+                  budget: {
+                    decrement: itemCount * itemPrice,
+                  },
+                },
+              },
+            },
+          });
+        } else if (notPaid) {
+          updateIncomeExpend = await client.incomeExpend.update({
+            where: {id: createIncomeExpend.id},
+            data: {
+              productItem: {connect: {id: createProduct.id}},
+              InNout: {
+                connect: {id: existsCompany.inNoutId},
+              },
+            },
+          });
+        }
+
         const updateCompanyInNout = await client.company.update({
           where: {companyName},
-          data: {inNout: {connect: {id: createIncomeExpend.id}}},
+          data: {
+            inNout: {
+              update: {
+                inNoutDesc: {connect: {id: createIncomeExpend.id}},
+              },
+            },
+          },
         });
-        if (!createProduct || !updateCompanyInNout) {
+        const CREATE = createIncomeExpend || createProduct;
+        const UPDATE = updateIncomeExpend || updateCompanyInNout;
+        if (!CREATE || !UPDATE) {
           return {
             ok: false,
             errorMsg: "상품을 생성하는데 실패했습니다.",

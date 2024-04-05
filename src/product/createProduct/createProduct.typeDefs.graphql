@@ -8,6 +8,11 @@ type Mutation {
     itemCount: Int
     itemPrice: Int
     itemDesc: String
+    incomeTrue: Boolean
+    paymentType: String
+    accountCode: String
+    businessDesc: String
     companyName: String!
+    paymentsDone: TPaymentSwitch
   ): ResultResponse!
 }
