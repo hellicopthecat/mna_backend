@@ -25,7 +25,7 @@ export default {
           if (!existsCompany) {
             return {
               ok: false,
-              errorMsg: "조회하신 회사는 존재하지 않습니다.",
+              errorMsg: "회사가 존재하지 않습니다.",
             };
           }
           const adminUser = await client.user.findUnique({
