@@ -1,3 +1,8 @@
+enum TPaymentSwitch {
+  WAIT
+  PAID
+  NONPAID
+}
 type IncomeExpend {
   id: Int!
   createdAt: String!
@@ -5,12 +10,12 @@ type IncomeExpend {
   productItem: Product
   incomeTrue: Boolean!
   infoSubtitle: String!
-  money: Int
+  money: Int!
   businessDate: String
   paymentType: String
   accountSubject: String
   businessDesc: String
-  paymentsDone: Boolean!
+  paymentsDone: TPaymentSwitch!
   inNout: InNout
   inNoutId: Int
   productId: Int
