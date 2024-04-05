@@ -2,7 +2,8 @@ type Mutation {
   updateInEx(
     companyName: String!
     infoSubtitle: String!
+    money: Int
     incomeTrue: Boolean
-    paymentsDone: Boolean
+    paymentsDone: TPaymentSwitch
   ): ResultResponse!
 }
