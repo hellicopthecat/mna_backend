@@ -14,12 +14,19 @@ export default {
     isOwned: ({userId}: Company, __, {logginUser}) => {
       return userId === logginUser.id ? true : false;
     },
-    isManger: async ({id}: Company, __, {logginUser}) => {
+    isManager: async ({id}: Company, __, {logginUser}) => {
       const manager = await client.company.findUnique({
         where: {id, companyManager: {some: {id: logginUser.id}}},
       });
 
       return manager ? true : false;
+    },
+    companyAdress: async ({id}: Company) => {
+      const {companyAdress} = await client.company.findUnique({
+        where: {id},
+        select: {companyAdress: true},
+      });
+      return companyAdress;
     },
     companyManager: async ({id}: Company, __, {logginUser}) => {
       const targetCompany = await client.company.findMany({

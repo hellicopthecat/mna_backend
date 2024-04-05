@@ -1,14 +1,13 @@
 type Company {
   id: String!
-  createAt: String!
+  createdAt: String!
   updateAt: String!
-  companyLogo: String!
+  companyLogo: String
   companyName: String!
   companyOwner: User!
   companyAdress: CompanyAdress
-  # computed
   isOwned: Boolean!
-  isManger: Boolean!
+  isManager: Boolean!
   companyManager: [User]!
   connectedCompany: [Company]
   connectedCompanyCount: Int!
