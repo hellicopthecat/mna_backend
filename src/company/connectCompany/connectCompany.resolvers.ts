@@ -9,11 +9,20 @@ export default {
     connectCompany: protectResolver(
       async (
         _,
-        {companyName, targetCompany}: Company & TargetCompany,
+        {companyName: myCompany, targetCompany}: Company & TargetCompany,
         {logginUser}
       ) => {
+        if (!myCompany || !targetCompany) {
+          return {
+            ok: false,
+            errorMsg: "회사명이 입력되지 않았습니다.",
+          };
+        }
         const adminUserCompany = await client.company.findUnique({
-          where: {companyName, companyManager: {some: {id: logginUser.id}}},
+          where: {
+            companyName: myCompany,
+            companyManager: {some: {id: logginUser.id}},
+          },
         });
         if (!adminUserCompany) {
           return {
@@ -24,6 +33,15 @@ export default {
           return {
             ok: false,
             errorMsg: "자사는 거래처로 등록될 수 없습니다.",
+          };
+        }
+        const findTargetCompany = await client.company.findUnique({
+          where: {companyName: targetCompany},
+        });
+        if (!findTargetCompany) {
+          return {
+            ok: false,
+            errorMsg: "연결하고자하는 회사가 존재하지 않습니다.",
           };
         }
         const connectCompany = await client.company.update({
