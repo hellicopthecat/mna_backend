@@ -9,7 +9,8 @@ export default {
         where: {companyName},
         select: {companyProduct: true},
       });
-      return companyProduct;
+      const result = companyProduct.map((item) => item.companyProduct);
+      return result[0];
     },
   },
 } as Resolvers;
