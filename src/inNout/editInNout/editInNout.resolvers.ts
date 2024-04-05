@@ -9,10 +9,10 @@ export default {
         _,
         {
           companyName,
-          capitalStock,
-          budget,
-          accountNum,
           accountName,
+          accountNum,
+          accountDesc,
+          budget,
         }: Company & InNout,
         {logginUser}
       ) => {
@@ -41,10 +41,10 @@ export default {
         const updateInNout = await client.inNout.update({
           where: {id: inNoutId},
           data: {
-            capitalStock,
-            budget,
-            accountNum,
             accountName,
+            accountNum,
+            accountDesc,
+            budget,
           },
         });
         if (!updateInNout) {

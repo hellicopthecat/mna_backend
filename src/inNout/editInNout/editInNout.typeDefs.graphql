@@ -1,9 +1,9 @@
 type Mutation {
   editInNout(
     companyName: String!
-    capitalStock: Int
-    budget: Int
     accountNum: String
     accountName: String
+    accountDesc: String
+    budget: Int
   ): ResultResponse!
 }
