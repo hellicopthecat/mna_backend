@@ -20,12 +20,13 @@ export default {
         }: Product,
         {logginUser}
       ) => {
-        const existsAdmin = await client.company.findMany({
+        const existsAdmin = await client.company.findFirst({
           where: {
-            companyProduct: {some: {itemModelName}},
+            companyProduct: {some: {itemProductId}},
             companyManager: {some: {id: logginUser.id}},
           },
         });
+
         if (!existsAdmin) {
           return {
             ok: false,
@@ -44,14 +45,24 @@ export default {
         const editProduct = await client.product.update({
           where: {itemProductId},
           data: {
+            itemModelName,
             itemName,
             itemPhoto,
             itemType,
             itemCount,
             itemPrice,
             itemDesc,
+            incomeExpend: {
+              update: {
+                where: {infoSubtitle: itemProductId},
+                data: {
+                  money: !itemCount ? itemPrice : itemCount * itemPrice,
+                },
+              },
+            },
           },
         });
+
         if (!editProduct) {
           return {
             ok: false,
