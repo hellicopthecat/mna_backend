@@ -1,0 +1,12 @@
+type EquityLiabilities {
+  id: Int!
+  createdAt: String!
+  updateAt: String!
+  enLId: String!
+  enLName: String! # 자산 제목
+  enLType: String! # 자산 유형
+  enLDesc: String # 자산 설명
+  current: Boolean!
+  assests: Boolean!
+  value: Int! # 자산값
+}
