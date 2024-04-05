@@ -7,5 +7,4 @@ type CompanyAdress {
   streetAdress: String
   restAdress: String
   adressNum: String
-  company: [Company]
 }
