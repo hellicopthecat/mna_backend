@@ -1,4 +1,4 @@
-import {Company, IncomeExpend} from "@prisma/client";
+import {Company, EquityLiabilities, IncomeExpend} from "@prisma/client";
 import {protectResolver} from "../../user/user.util";
 import client from "../../prismaClient";
 
@@ -17,7 +17,12 @@ export default {
           accountCode,
           businessDesc,
           paymentsDone,
-        }: Company & IncomeExpend,
+          enLName,
+          enLType,
+          enLDesc,
+          current,
+          assests,
+        }: Company & IncomeExpend & EquityLiabilities,
         {logginUser}
       ) => {
         const existsCompany = await client.company.findUnique({
@@ -32,7 +37,7 @@ export default {
         const existsInEx = await client.incomeExpend.findUnique({
           where: {infoSubtitle},
         });
-        if (!existsInEx) {
+        if (existsInEx) {
           return {
             ok: false,
             errorMsg: "존재하는 수입지출제목입니다.",
@@ -48,13 +53,56 @@ export default {
             accountCode,
             businessDesc,
             paymentsDone,
+            InNout: {connect: {id: existsCompany.inNoutId}},
+          },
+        });
+        const createEnL = await client.equityLiabilities.create({
+          data: {
+            enLId: infoSubtitle,
+            enLName,
+            enLType,
+            enLDesc,
+            current,
+            assests,
+            value: money,
+            InNout: {connect: {id: existsCompany.inNoutId}},
           },
         });
 
-        const updateCompany = await client.company.update({
-          where: {companyName},
-          data: {inNout: {connect: {id: createInEx.id}}},
-        });
+        let updateBudget: any;
+        const income = incomeTrue && paymentsDone === "PAID";
+        const expend = !incomeTrue && paymentsDone === "PAID";
+        if (income) {
+          updateBudget = await client.inNout.update({
+            where: {id: createInEx.inNoutId},
+            data: {
+              budget: {
+                increment: createInEx.money,
+              },
+            },
+          });
+        } else if (expend) {
+          updateBudget = await client.inNout.update({
+            where: {id: createInEx.inNoutId},
+            data: {
+              budget: {
+                decrement: createInEx.money,
+              },
+            },
+          });
+        }
+
+        const CREATE = createInEx && createEnL;
+
+        if (!CREATE || !updateBudget) {
+          return {
+            ok: false,
+            errorMsg: "수입지출모델을 만드는데 실패했습니다.",
+          };
+        }
+        return {
+          ok: true,
+        };
       }
     ),
   },

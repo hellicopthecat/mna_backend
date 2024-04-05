@@ -8,6 +8,11 @@ type Mutation {
     paymentType: String
     accountCode: String
     businessDesc: String
-    paymentsDone: Boolean!
+    paymentsDone: TPaymentSwitch
+    enLName: String!
+    enLType: String!
+    enLDesc: String
+    current: Boolean
+    assests: Boolean
   ): ResultResponse!
 }
