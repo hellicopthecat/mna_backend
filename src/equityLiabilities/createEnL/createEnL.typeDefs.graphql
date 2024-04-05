@@ -1,0 +1,12 @@
+type Mutation {
+  createEnL(
+    companyName: String!
+    enLId: String!
+    enLName: String!
+    enLType: String!
+    enLDesc: String
+    current: Boolean!
+    assests: Boolean!
+    value: Int!
+  ): ResultResponse!
+}
