@@ -2,6 +2,7 @@ import {User} from "@prisma/client";
 
 type Context = {
   logginUser?: User;
+  abbreviation: 1000000;
 };
 
 export type Resolver = (
