@@ -4,8 +4,11 @@ import client from "../../prismaClient";
 
 export default {
   Query: {
-    seeProduct: async (_, {itemProductId, itemName, itemModelName}: Product) =>
-      await client.product.findMany({
+    seeProduct: async (
+      _,
+      {itemProductId, itemName, itemModelName}: Product
+    ) => {
+      const findProduct = await client.product.findMany({
         where: {
           OR: [
             {itemProductId: {contains: itemProductId}},
@@ -13,6 +16,8 @@ export default {
             {itemModelName: {contains: itemModelName}},
           ],
         },
-      }),
+      });
+      return findProduct;
+    },
   },
 } as Resolvers;
