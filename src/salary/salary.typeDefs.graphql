@@ -1,0 +1,10 @@
+type Salary {
+  id: String!
+  createdAt: String!
+  updateAt: String!
+  beforeTaxMonthlySalary: Int
+  afterTaxMonthlySalary: Int
+  annualSalary: Int
+  user: User!
+  company: Company!
+}
