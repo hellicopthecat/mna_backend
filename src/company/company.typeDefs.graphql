@@ -13,4 +13,6 @@ type Company {
   connectedCompanyCount: Int!
   connectingCompany: [Company]
   connectingCompanyCount: Int!
+  companyProduct: [Product]
+  companyInNout: InNout!
 }

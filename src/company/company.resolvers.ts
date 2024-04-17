@@ -78,5 +78,19 @@ export default {
       });
       return connectingCompany.length;
     },
+    companyProduct: async ({id}: Company) => {
+      const product = await client.company.findUnique({
+        where: {id},
+        select: {companyProduct: true},
+      });
+      return product.companyProduct;
+    },
+    companyInNout: async ({id}: Company) => {
+      const inNout = await client.company.findUnique({
+        where: {id},
+        select: {inNout: true},
+      });
+      return inNout.inNout;
+    },
   },
 } as Resolvers;
