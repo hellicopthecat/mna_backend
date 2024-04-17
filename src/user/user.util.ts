@@ -1,6 +1,7 @@
 import jwt, {JwtPayload} from "jsonwebtoken";
 import client from "../prismaClient";
 import {Context, Resolver} from "../types";
+import {GraphQLResolveInfo} from "graphql";
 
 export const getUser = async (token: any) => {
   try {
@@ -22,12 +23,17 @@ export const getUser = async (token: any) => {
 
 export const protectResolver =
   (resovler: Resolver) =>
-  (root: any, args: any, context: Context, info: any) => {
+  (root: any, args: any, context: Context, info: GraphQLResolveInfo) => {
     if (!context.logginUser) {
-      return {
-        ok: false,
-        errorMsg: "로그인 후 사용 가능합니다.",
-      };
+      const query = info.operation.operation === "query";
+      if (query) {
+        return;
+      } else {
+        return {
+          ok: false,
+          errorMsg: "로그인 후 사용 가능합니다.",
+        };
+      }
     }
     return resovler(root, args, context, info);
   };

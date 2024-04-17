@@ -7,6 +7,9 @@ type User {
   firstName: String
   lastName: String
   avatar: String
+  phone: String
+  vacation: [Vacation]
+  salary: [Salary]
   ownCompany: [Company]
   hasCompanyCount: Int!
   manageCompany: [Company]

@@ -4,10 +4,24 @@ import {User} from "@prisma/client";
 
 export default {
   User: {
-    ownCompany: async ({id}: User) => {
-      const myCompany = await client.user.findUnique({
+    vacation: async ({id}: User) => {
+      const {vacation} = await client.user.findFirst({
         where: {id},
-        select: {ownCompany: true},
+        select: {vacation: true},
+      });
+      return vacation;
+    },
+    salary: async ({id}: User) => {
+      const {salary} = await client.user.findFirst({
+        where: {id},
+        select: {salary: true},
+      });
+      return salary;
+    },
+    ownCompany: async ({id}: User) => {
+      const myCompany = await client.user.findFirst({
+        where: {id},
+        select: {ownCompany: {skip: 0, take: 6, orderBy: {createdAt: "asc"}}},
       });
       return myCompany.ownCompany;
     },
@@ -21,7 +35,7 @@ export default {
     manageCompany: async ({id}: User) => {
       const company = await client.user.findFirst({
         where: {id},
-        select: {isManage: true},
+        select: {isManage: {skip: 0, take: 6, orderBy: {createdAt: "asc"}}},
       });
       return company.isManage;
     },
