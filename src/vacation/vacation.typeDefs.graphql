@@ -1,0 +1,10 @@
+type Vacation {
+  id: String!
+  createdAt: String!
+  updateAt: String!
+  totalVacation: Int
+  restVacation: Int
+  specialVation: Int
+  sickLeave: Int
+  user: User!
+}
