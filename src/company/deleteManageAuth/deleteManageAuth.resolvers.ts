@@ -1,7 +1,6 @@
 import {Company, User} from "@prisma/client";
 import client from "../../prismaClient";
 import {protectResolver} from "../../user/user.util";
-import {it} from "node:test";
 
 export default {
   Mutation: {
@@ -17,24 +16,16 @@ export default {
             };
           }
           // exists company manager
-          const {companyName: targetCompany, companyManager} =
-            await client.company.findFirst({
-              where: {
-                companyName,
-                companyManager: {some: {id: logginUser.id}},
-              },
-              select: {companyName: true, companyManager: {select: {id: true}}},
-            });
-          const {id: managerId} = companyManager.find(
-            (item) => item.id === logginUser.id
-          );
+          const targetCompany = await client.company.findFirst({
+            where: {companyName},
+          });
           if (!targetCompany) {
-            return {
-              ok: false,
-              errorMsg: "존재하지 않는 회사입니다.",
-            };
+            return {ok: false, errorMsg: "존재하지 않는 회사입니다."};
           }
-          if (managerId !== logginUser.id) {
+          const checkAdmin = await client.company.findFirst({
+            where: {companyName, companyManager: {some: {id: logginUser.id}}},
+          });
+          if (!checkAdmin) {
             return {
               ok: false,
               errorMsg: "당신은 권한이 없습니다.",
@@ -42,7 +33,9 @@ export default {
           }
           const disconnectUser = await client.company.update({
             where: {companyName},
-            data: {companyManager: {disconnect: {id: existsUser.id}}},
+            data: {
+              companyManager: {disconnect: {id: existsUser.id}},
+            },
           });
           if (!disconnectUser) {
             return {
