@@ -1,0 +1,3 @@
+type Mutation {
+  deleteUser(password: String!): ResultResponse!
+}
