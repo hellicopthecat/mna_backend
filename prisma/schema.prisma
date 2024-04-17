@@ -8,17 +8,48 @@ datasource db {
 }
 
 model User {
-  id         Int       @id @default(autoincrement())
-  createdAt  DateTime  @default(now())
-  updateAt   DateTime  @updatedAt
-  username   String    @unique
-  email      String    @unique
+  id         Int        @id @default(autoincrement())
+  createdAt  DateTime   @default(now())
+  updateAt   DateTime   @updatedAt
+  username   String     @unique
+  email      String     @unique
   password   String
   firstName  String?
   lastName   String?
   avatar     String?
-  ownCompany Company[] @relation(name: "OwnedBy")
-  isManage   Company[]
+  phone      String?    @unique
+  vacation   Vacation[] @relation(name: "Vacation")
+  salary     Salary[]
+  ownCompany Company[]  @relation(name: "OwnedBy")
+  isManage   Company[]  @relation(name: "Manager")
+  myCompany  Company[]  @relation(name: "Worker")
+}
+
+model Salary {
+  id                     Int      @id @default(autoincrement())
+  createdAt              DateTime @default(now())
+  updateAt               DateTime @updatedAt
+  beforeTaxMonthlySalary Int?
+  annualSalary           Int?
+  company                Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyId              Int
+  userId                 Int
+}
+
+model Vacation {
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now())
+  updateAt      DateTime @updatedAt
+  totalVacation Int?
+  restVacation  Int?
+  specialVation Int?
+  sickLeave     Int?
+  company       Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user          User     @relation(name: "Vacation", fields: [userId], references: [id])
+
+  companyId Int
+  userId    Int
 }
 
 model Company {
@@ -27,9 +58,10 @@ model Company {
   updateAt          DateTime       @updatedAt
   companyLogo       String?
   companyName       String         @unique
-  companyOwner      User           @relation(name: "OwnedBy", fields: [userId], references: [id])
+  companyOwner      User           @relation(name: "OwnedBy", fields: [userId], references: [id], onDelete: Cascade)
   companyAdress     CompanyAdress? @relation(fields: [companyAdressId], references: [id], onDelete: Cascade)
-  companyManager    User[]
+  companyManager    User[]         @relation(name: "Manager")
+  worker            User[]         @relation(name: "Worker")
   connectedCompany  Company[]      @relation("connectComapny") // 거래처
   connectingCompany Company[]      @relation("connectComapny") // 거래처
   companyProduct    Product[] // 회사 상품
@@ -37,6 +69,8 @@ model Company {
   userId            Int
   companyAdressId   Int
   inNoutId          Int
+  Vacation          Vacation[]
+  Salary            Salary[]
 }
 
 model CompanyAdress {
@@ -56,7 +90,7 @@ model Product {
   id            Int            @id @default(autoincrement())
   createdAt     DateTime       @default(now())
   updateAt      DateTime       @updatedAt
-  company       Company        @relation(fields: [companyId], references: [id])
+  company       Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
   itemProductId String         @unique
   itemName      String // 제품이름
   itemModelName String? // 제품 모델명
@@ -95,7 +129,7 @@ model EquityLiabilities {
   current   Boolean  @default(true) // 유동 / 비유동
   assests   Boolean  @default(true) // 자산 / 부채
   value     Int // 자산값
-  InNout    InNout?  @relation(fields: [inNoutId], references: [id])
+  InNout    InNout?  @relation(fields: [inNoutId], references: [id], onDelete: Cascade)
   inNoutId  Int?
 }
 
@@ -109,7 +143,7 @@ model IncomeExpend {
   id           Int            @id @default(autoincrement())
   createdAt    DateTime       @default(now())
   updateAt     DateTime       @updatedAt
-  productItem  Product?       @relation(fields: [productId], references: [id])
+  productItem  Product?       @relation(fields: [productId], references: [id], onDelete: Cascade)
   incomeTrue   Boolean?       @default(true) //수입지출타입
   infoSubtitle String         @unique
   money        Int? // 수익지출금
