@@ -1,0 +1,8 @@
+type Mutation {
+  createSalary(
+    username: String!
+    companyName: String!
+    beforeTaxMonthlySalary: Int
+    annualSalary: Int
+  ): ResultResponse!
+}
