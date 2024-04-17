@@ -20,15 +20,11 @@ export default {
             return {ok: false, errorMsg: "등록된 회사가 존재하지 않습니다."};
           }
           //companyManager
-          const companyManagers = await client.company.findFirst({
-            where: {companyName},
-            select: {companyManager: {select: {id: true}}},
+          const checkAdmin = await client.company.findFirst({
+            where: {companyName, companyManager: {some: {id: logginUser.id}}},
           });
-          const managerid = companyManagers.companyManager.find(
-            (item) => item.id === logginUser.id
-          );
 
-          if (managerid.id !== logginUser.id) {
+          if (!checkAdmin) {
             return {ok: false, errorMsg: "권한이 없습니다."};
           }
 
@@ -37,6 +33,7 @@ export default {
             where: {companyName},
             data: {
               companyManager: {connect: {id: existsUser.id}},
+              worker: {connect: {id: existsUser.id}},
             },
           });
           if (!updateCompany) {
