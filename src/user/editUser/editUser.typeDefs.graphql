@@ -4,5 +4,6 @@ type Mutation {
     firstName: String
     lastName: String
     avatar: String
+    phone: String
   ): ResultResponse!
 }

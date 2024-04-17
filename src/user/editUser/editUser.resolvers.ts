@@ -8,7 +8,7 @@ export default {
     editUser: protectResolver(
       async (
         _,
-        {password, firstName, lastName, avatar}: User,
+        {password, firstName, lastName, avatar, phone}: User,
         {logginUser}
       ) => {
         try {
@@ -25,7 +25,7 @@ export default {
 
           const userUpdate = await client.user.update({
             where: {id: logginUser.id},
-            data: {firstName, lastName, password: newHashPw},
+            data: {firstName, lastName, password: newHashPw, phone},
           });
           if (userUpdate) {
             return {
