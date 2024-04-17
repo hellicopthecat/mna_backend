@@ -6,9 +6,11 @@ import {Resolvers} from "../../types";
 
 export default {
   Mutation: {
-    loginUser: async (_, {username, password}: User) => {
+    loginUser: async (_, {username, email, password}: User) => {
       try {
-        const existsUser = await client.user.findFirst({where: {username}});
+        const existsUser = await client.user.findFirst({
+          where: {OR: [{username}, {email}]},
+        });
         if (!existsUser) {
           return {
             ok: false,
