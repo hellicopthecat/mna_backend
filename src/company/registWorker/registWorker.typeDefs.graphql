@@ -1,0 +1,3 @@
+type Mutation {
+  registWorker(username: String!, companyName: String!): ResultResponse!
+}
