@@ -21,7 +21,7 @@ export default {
     ownCompany: async ({id}: User) => {
       const myCompany = await client.user.findFirst({
         where: {id},
-        select: {ownCompany: {skip: 0, take: 6, orderBy: {createdAt: "asc"}}},
+        select: {ownCompany: {skip: 0, take: 12, orderBy: {createdAt: "asc"}}},
       });
       return myCompany.ownCompany;
     },
@@ -35,7 +35,7 @@ export default {
     manageCompany: async ({id}: User) => {
       const company = await client.user.findFirst({
         where: {id},
-        select: {isManage: {skip: 0, take: 6, orderBy: {createdAt: "asc"}}},
+        select: {isManage: {skip: 0, take: 12, orderBy: {createdAt: "asc"}}},
       });
       return company.isManage;
     },

@@ -112,11 +112,8 @@ export default {
         where: {id},
         select: {totalAssets: true},
       });
-
       const t_Assets = totalAssets.map((asset) => asset.value);
-      const currentLiability = totalAssets.filter(
-        (assets) => !assets.assests && assets.current && !assets.current
-      );
+      const currentLiability = totalAssets.filter((assets) => !assets.assests);
       const liabilityArray = currentLiability.map((asset) => asset.value);
       const TOTAL_ASSETS = reduceAssets(t_Assets);
       const TOTAL_LIABILITIES = reduceAssets(liabilityArray);
@@ -127,11 +124,8 @@ export default {
         where: {id},
         select: {totalAssets: true},
       });
-
       const t_Assets = totalAssets.map((asset) => asset.value);
-      const currentLiability = totalAssets.filter(
-        (assets) => !assets.assests && assets.current && !assets.current
-      );
+      const currentLiability = totalAssets.filter((assets) => !assets.assests);
       const liabilityArray = currentLiability.map((asset) => asset.value);
       const TOTAL_ASSETS = reduceAssets(t_Assets);
       const TOTAL_LIABILITIES = reduceAssets(liabilityArray);
@@ -142,11 +136,8 @@ export default {
         where: {id},
         select: {totalAssets: true},
       });
-
       const t_Assets = totalAssets.map((asset) => asset.value);
-      const currentAssets = totalAssets.filter(
-        (assets) => assets.assests && assets.current && !assets.current
-      );
+      const currentAssets = totalAssets.filter((assets) => assets.assests);
       const assetsArray = currentAssets.map((asset) => asset.value);
       const TOTAL_ASSETS = reduceAssets(t_Assets);
       const TOTAL_CAPITAL = reduceAssets(assetsArray);
@@ -204,55 +195,45 @@ export default {
       const expenseValue = expense.map((income) => income.money);
       const totalRevenue = reduceAssets(revenueValue);
       const netIncome = reduceAssets(revenueValue) - reduceAssets(expenseValue);
-      return (netIncome / totalRevenue) * 100;
+      return (netIncome / totalRevenue) * 100 || (null && 0);
     }, // 이익률
     equityRatio: async ({id}: InNout) => {
       const {totalAssets} = await client.inNout.findUnique({
         where: {id},
         select: {totalAssets: true},
       });
-
       const t_Assets = totalAssets.map((asset) => asset.value);
-      const currentLiability = totalAssets.filter(
-        (assets) => !assets.assests && assets.current && !assets.current
-      );
+      const currentLiability = totalAssets.filter((assets) => !assets.assests);
       const liabilityArray = currentLiability.map((asset) => asset.value);
       const TOTAL_ASSETS = reduceAssets(t_Assets);
       const TOTAL_LIABILITIES = reduceAssets(liabilityArray);
       const CAPITAL = TOTAL_ASSETS - TOTAL_LIABILITIES;
 
-      return (CAPITAL / TOTAL_ASSETS) * 100;
+      return (CAPITAL / TOTAL_ASSETS) * 100 || (null && 0);
     }, // 자기자본비율
     debtRatio: async ({id}: InNout) => {
       const {totalAssets} = await client.inNout.findUnique({
         where: {id},
         select: {totalAssets: true},
       });
-
       const t_Assets = totalAssets.map((asset) => asset.value);
-      const currentLiability = totalAssets.filter(
-        (assets) => !assets.assests && assets.current && !assets.current
-      );
+      const currentLiability = totalAssets.filter((assets) => !assets.assests);
       const liabilityArray = currentLiability.map((asset) => asset.value);
       const TOTAL_ASSETS = reduceAssets(t_Assets);
       const TOTAL_LIABILITIES = reduceAssets(liabilityArray);
-      return (TOTAL_LIABILITIES / TOTAL_ASSETS) * 100;
+      return (TOTAL_LIABILITIES / TOTAL_ASSETS) * 100 || (null && 0);
     }, // 부채비율
     roe: async ({id}: InNout) => {
       const {totalAssets, inNoutDesc} = await client.inNout.findUnique({
         where: {id},
         select: {totalAssets: true, inNoutDesc: true},
       });
-
       const t_Assets = totalAssets.map((asset) => asset.value);
-      const currentLiability = totalAssets.filter(
-        (assets) => !assets.assests && assets.current && !assets.current
-      );
+      const currentLiability = totalAssets.filter((assets) => !assets.assests);
       const liabilityArray = currentLiability.map((asset) => asset.value);
       const TOTAL_ASSETS = reduceAssets(t_Assets);
       const TOTAL_LIABILITIES = reduceAssets(liabilityArray);
       const CAPITAL = TOTAL_ASSETS - TOTAL_LIABILITIES;
-
       const revenue = inNoutDesc.filter(
         (ie) => ie.incomeTrue && ie.paymentsDone === "PAID"
       );
@@ -262,7 +243,7 @@ export default {
       );
       const expenseValue = expense.map((income) => income.money);
       const NETINCOME = reduceAssets(revenueValue) - reduceAssets(expenseValue);
-      return (NETINCOME / CAPITAL) * 100;
+      return (NETINCOME / CAPITAL) * 100 || (null && 0);
     }, // 자기자본회수기간
     incomeModel: async ({id}: InNout) => {
       const {inNoutDesc} = await client.inNout.findUnique({

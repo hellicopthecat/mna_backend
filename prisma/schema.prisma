@@ -13,11 +13,11 @@ model User {
   updateAt   DateTime   @updatedAt
   username   String     @unique
   email      String     @unique
+  phone      String     @unique
   password   String
   firstName  String?
   lastName   String?
   avatar     String?
-  phone      String?    @unique
   vacation   Vacation[] @relation(name: "Vacation")
   salary     Salary[]
   ownCompany Company[]  @relation(name: "OwnedBy")

@@ -53,7 +53,9 @@ export default {
     connectedCompany: async ({id}: Company, __, {logginUser}) => {
       const {connectedCompany} = await client.company.findUnique({
         where: {id, companyManager: {some: {id: logginUser.id}}},
-        select: {connectedCompany: true},
+        select: {
+          connectedCompany: {skip: 0, take: 5, orderBy: {createdAt: "desc"}},
+        },
       });
       return connectedCompany;
     },
@@ -67,7 +69,9 @@ export default {
     connectingCompany: async ({id}: Company, __, {logginUser}) => {
       const {connectingCompany} = await client.company.findUnique({
         where: {id, companyManager: {some: {id: logginUser.id}}},
-        select: {connectingCompany: true},
+        select: {
+          connectingCompany: {skip: 0, take: 5, orderBy: {createdAt: "desc"}},
+        },
       });
       return connectingCompany;
     },
@@ -86,11 +90,17 @@ export default {
       return product.companyProduct;
     },
     companyInNout: async ({id}: Company) => {
-      const inNout = await client.company.findUnique({
+      const {inNout} = await client.company.findUnique({
         where: {id},
         select: {inNout: true},
       });
-      return inNout.inNout;
+      return inNout;
     },
+    companyWorker: async ({id}: Company) =>
+      await client.company.findUnique({where: {id}, select: {worker: true}}),
+    workerVacation: async ({id}: Company) =>
+      await client.company.findUnique({where: {id}, select: {Vacation: true}}),
+    workerSalary: async ({id}: Company) =>
+      await client.company.findUnique({where: {id}, select: {Salary: true}}),
   },
 } as Resolvers;

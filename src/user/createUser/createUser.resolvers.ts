@@ -11,7 +11,7 @@ export default {
     ) => {
       try {
         const existsUser = await client.user.findFirst({
-          where: {OR: [{username}, {email}]},
+          where: {OR: [{username}, {email}, {phone}]},
         });
         if (existsUser) {
           if (username === existsUser.username) {
@@ -30,6 +30,12 @@ export default {
             return {
               ok: false,
               errorMsg: "비밀번호는 3자리보다 커야합니다.",
+            };
+          }
+          if (phone === existsUser.phone) {
+            return {
+              ok: false,
+              errorMsg: "이미 사용중입니다.",
             };
           }
         } else {
