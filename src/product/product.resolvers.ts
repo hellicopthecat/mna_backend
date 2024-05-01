@@ -17,5 +17,12 @@ export default {
       });
       return incomeExpend;
     },
+    incomeExpendTypeId: async ({id}: Product) => {
+      const {id: IETypeId} = await client.product.findUnique({
+        where: {id},
+        select: {id: true},
+      });
+      return IETypeId;
+    },
   },
 };

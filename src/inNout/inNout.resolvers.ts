@@ -258,11 +258,15 @@ export default {
         where: {id},
         select: {inNoutDesc: true},
       });
-      let money: any;
       const income = inNoutDesc.filter(
-        (item) => item.incomeTrue && item.paymentsDone
+        (item) => item.incomeTrue && item.paymentsDone === "PAID"
       );
-      income.forEach((item) => (item.money += money));
+      const {money} = income.reduce(
+        (prevValue, currentValue) => ({
+          money: prevValue.money + currentValue.money,
+        }),
+        {money: 0}
+      );
       return money;
     }, // 수익금
     expendModel: async ({id}: InNout) => {
@@ -278,11 +282,15 @@ export default {
         where: {id},
         select: {inNoutDesc: true},
       });
-      let money: any;
-      const income = inNoutDesc.filter(
-        (item) => !item.incomeTrue && item.paymentsDone
+      const expend = inNoutDesc.filter(
+        (item) => !item.incomeTrue && item.paymentsDone === "PAID"
       );
-      income.forEach((item) => (item.money += money));
+      const {money} = expend.reduce(
+        (prevValue, currentValue) => ({
+          money: prevValue.money + currentValue.money,
+        }),
+        {money: 0}
+      );
       return money;
     }, // 지출금
   },

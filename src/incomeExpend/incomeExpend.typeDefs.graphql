@@ -13,7 +13,7 @@ type IncomeExpend {
   money: Int!
   businessDate: String
   paymentType: String
-  accountSubject: String
+  accountCode: String
   businessDesc: String
   paymentsDone: TPaymentSwitch!
   inNout: InNout
