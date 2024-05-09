@@ -1,6 +1,7 @@
 type ResultResponse {
   ok: Boolean!
   errorMsg: String
+  id: Int
 }
 type LoginResultResponse {
   ok: Boolean!

@@ -1,0 +1,3 @@
+type Query {
+  seeEnL(companyName: String!, id: Int!): EquityLiabilities!
+}

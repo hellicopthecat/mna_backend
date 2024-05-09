@@ -1,0 +1,8 @@
+type Query {
+  searchProduct(
+    id: Int
+    itemProductId: String
+    itemName: String
+    itemModelName: String
+  ): [Product]
+}

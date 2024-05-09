@@ -1,7 +1,3 @@
 type Query {
-  seeProduct(
-    itemProductId: String
-    itemName: String
-    itemModelName: String
-  ): [Product]
+  seeProduct(id: Int!): Product!
 }

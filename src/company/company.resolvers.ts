@@ -85,7 +85,9 @@ export default {
     companyProduct: async ({id}: Company) => {
       const product = await client.company.findUnique({
         where: {id},
-        select: {companyProduct: true},
+        select: {
+          companyProduct: {skip: 0, take: 10, orderBy: {createdAt: "desc"}},
+        },
       });
       return product.companyProduct;
     },

@@ -1,5 +1,6 @@
 type Mutation {
   editProduct(
+    id: Int!
     itemProductId: String!
     itemModelName: String
     itemName: String
@@ -8,5 +9,10 @@ type Mutation {
     itemCount: Int
     itemPrice: Int
     itemDesc: String
+    incomeTrue: Boolean
+    paymentType: String
+    accountCode: String
+    businessDesc: String
+    paymentsDone: TPaymentSwitch
   ): ResultResponse!
 }

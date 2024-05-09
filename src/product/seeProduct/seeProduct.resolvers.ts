@@ -4,17 +4,10 @@ import client from "../../prismaClient";
 
 export default {
   Query: {
-    seeProduct: async (
-      _,
-      {itemProductId, itemName, itemModelName}: Product
-    ) => {
-      const findProduct = await client.product.findMany({
+    seeProduct: async (_, {id}: Product) => {
+      const findProduct = await client.product.findUnique({
         where: {
-          OR: [
-            {itemProductId: {contains: itemProductId}},
-            {itemName: {contains: itemName}},
-            {itemModelName: {contains: itemModelName}},
-          ],
+          id,
         },
       });
       return findProduct;

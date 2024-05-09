@@ -1,5 +1,4 @@
-import {Product} from "@prisma/client";
-import {Resolvers} from "../../types";
+import {IncomeExpend, Product} from "@prisma/client";
 import {protectResolver} from "../../user/user.util";
 import client from "../../prismaClient";
 
@@ -9,6 +8,7 @@ export default {
       async (
         _,
         {
+          id,
           itemProductId,
           itemModelName,
           itemName,
@@ -17,12 +17,17 @@ export default {
           itemCount,
           itemPrice,
           itemDesc,
-        }: Product,
+          incomeTrue,
+          paymentType,
+          accountCode,
+          businessDesc,
+          paymentsDone,
+        }: Product & IncomeExpend,
         {logginUser}
       ) => {
         const existsAdmin = await client.company.findFirst({
           where: {
-            companyProduct: {some: {itemProductId}},
+            companyProduct: {some: {id}},
             companyManager: {some: {id: logginUser.id}},
           },
         });
@@ -30,11 +35,11 @@ export default {
         if (!existsAdmin) {
           return {
             ok: false,
-            errorMsg: "권한이 없습니다.",
+            errorMsg: "상품이 없거나 권한이 없습니다.",
           };
         }
         const existsProduct = await client.product.findUnique({
-          where: {itemProductId},
+          where: {id},
         });
         if (!existsProduct) {
           return {
@@ -43,7 +48,7 @@ export default {
           };
         }
         const editProduct = await client.product.update({
-          where: {itemProductId},
+          where: {id},
           data: {
             itemModelName,
             itemName,
@@ -54,9 +59,14 @@ export default {
             itemDesc,
             incomeExpend: {
               update: {
-                where: {infoSubtitle: itemProductId},
+                where: {infoSubtitle: itemProductId, productId: id},
                 data: {
-                  money: !itemCount ? itemPrice : itemCount * itemPrice,
+                  money: itemCount <= 0 ? 1 * itemPrice : itemCount * itemPrice,
+                  incomeTrue,
+                  paymentType,
+                  accountCode,
+                  businessDesc,
+                  paymentsDone,
                 },
               },
             },
@@ -75,4 +85,4 @@ export default {
       }
     ),
   },
-} as Resolvers;
+};

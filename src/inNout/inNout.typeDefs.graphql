@@ -23,10 +23,10 @@ type InNout {
   netIncome: Int! # 순이익
   totalRevenue: Int! # 총수익
   totalExpenses: Int! # 총비용
-  profitMargin: Float # 이익률 Float
-  equityRatio: Float # 자기자본비율 Float
-  debtRatio: Float # 부채비율 Float
-  roe: Float # 자기자본회수기간 Float
+  profitMargin: Float! # 이익률 Float
+  equityRatio: Float! # 자기자본비율 Float
+  debtRatio: Float! # 부채비율 Float
+  roe: Float! # 자기자본회수기간 Float
   incomeModel: [IncomeExpend]
   incomeMoney: Int
   expendModel: [IncomeExpend]

@@ -28,7 +28,6 @@ export default {
             ],
           },
         });
-        console.log(existsAdmin);
         if (!existsAdmin) {
           return {
             ok: false,
@@ -64,8 +63,10 @@ export default {
             errorMsg: "자산을 생성하는데 실패하였습니다.",
           };
         }
+        console.log(createEnL.id);
         return {
           ok: true,
+          id: createEnL.id,
         };
       }
     ),

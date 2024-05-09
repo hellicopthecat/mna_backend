@@ -19,7 +19,9 @@ export default {
     totalAssetsDesc: async ({id}: InNout) => {
       const {totalAssets} = await client.inNout.findUnique({
         where: {id},
-        select: {totalAssets: true},
+        select: {
+          totalAssets: {skip: 0, take: 10, orderBy: {id: "desc"}},
+        },
       });
       return totalAssets;
     }, // 전체자산내역
@@ -37,7 +39,7 @@ export default {
     currentAssetsDesc: async ({id}: InNout) => {
       const {totalAssets} = await client.inNout.findUnique({
         where: {id},
-        select: {totalAssets: true},
+        select: {totalAssets: {skip: 0, take: 10, orderBy: {id: "desc"}}},
       });
       const currentAsset = totalAssets.filter(
         (assets) => assets.assests && assets.current
@@ -58,11 +60,12 @@ export default {
     nonCurrentAssetsDesc: async ({id}: InNout) => {
       const {totalAssets} = await client.inNout.findUnique({
         where: {id},
-        select: {totalAssets: true},
+        select: {totalAssets: {skip: 0, take: 10, orderBy: {id: "desc"}}},
       });
       const nonCurrentAsset = totalAssets.filter(
         (assets) => assets.assests && !assets.current
       );
+
       return nonCurrentAsset;
     }, // 비유동자산내역
     currentLiabilities: async ({id}: InNout) => {
@@ -79,7 +82,7 @@ export default {
     currentLiabilitiesDesc: async ({id}: InNout) => {
       const {totalAssets} = await client.inNout.findUnique({
         where: {id},
-        select: {totalAssets: true},
+        select: {totalAssets: {skip: 0, take: 10, orderBy: {id: "desc"}}},
       });
       const currentLiability = totalAssets.filter(
         (assets) => !assets.assests && assets.current
@@ -100,7 +103,7 @@ export default {
     nonCurrentLiabilitiesDesc: async ({id}: InNout) => {
       const {totalAssets} = await client.inNout.findUnique({
         where: {id},
-        select: {totalAssets: true},
+        select: {totalAssets: {skip: 0, take: 10, orderBy: {id: "desc"}}},
       });
       const nonCurrentLiability = totalAssets.filter(
         (assets) => !assets.assests && !assets.current
@@ -195,7 +198,10 @@ export default {
       const expenseValue = expense.map((income) => income.money);
       const totalRevenue = reduceAssets(revenueValue);
       const netIncome = reduceAssets(revenueValue) - reduceAssets(expenseValue);
-      return (netIncome / totalRevenue) * 100 || (null && 0);
+      if (totalRevenue <= 0 || netIncome <= 0) {
+        return 0;
+      }
+      return Number(((netIncome / totalRevenue) * 100).toFixed(4));
     }, // 이익률
     equityRatio: async ({id}: InNout) => {
       const {totalAssets} = await client.inNout.findUnique({
@@ -209,7 +215,7 @@ export default {
       const TOTAL_LIABILITIES = reduceAssets(liabilityArray);
       const CAPITAL = TOTAL_ASSETS - TOTAL_LIABILITIES;
 
-      return (CAPITAL / TOTAL_ASSETS) * 100 || (null && 0);
+      return !(CAPITAL / TOTAL_ASSETS) ? 0 : (CAPITAL / TOTAL_ASSETS) * 100;
     }, // 자기자본비율
     debtRatio: async ({id}: InNout) => {
       const {totalAssets} = await client.inNout.findUnique({
@@ -221,7 +227,10 @@ export default {
       const liabilityArray = currentLiability.map((asset) => asset.value);
       const TOTAL_ASSETS = reduceAssets(t_Assets);
       const TOTAL_LIABILITIES = reduceAssets(liabilityArray);
-      return (TOTAL_LIABILITIES / TOTAL_ASSETS) * 100 || (null && 0);
+
+      return !(TOTAL_LIABILITIES / TOTAL_ASSETS)
+        ? 0
+        : (TOTAL_LIABILITIES / TOTAL_ASSETS) * 100;
     }, // 부채비율
     roe: async ({id}: InNout) => {
       const {totalAssets, inNoutDesc} = await client.inNout.findUnique({
@@ -243,7 +252,9 @@ export default {
       );
       const expenseValue = expense.map((income) => income.money);
       const NETINCOME = reduceAssets(revenueValue) - reduceAssets(expenseValue);
-      return (NETINCOME / CAPITAL) * 100 || (null && 0);
+      return NETINCOME / CAPITAL === Infinity || !(NETINCOME / CAPITAL)
+        ? 0
+        : Number(((NETINCOME / CAPITAL) * 100).toFixed(5));
     }, // 자기자본회수기간
     incomeModel: async ({id}: InNout) => {
       const {inNoutDesc} = await client.inNout.findUnique({

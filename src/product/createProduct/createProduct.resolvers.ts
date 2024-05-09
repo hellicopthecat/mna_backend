@@ -51,7 +51,7 @@ export default {
         const createIncomeExpend = await client.incomeExpend.create({
           data: {
             infoSubtitle: itemProductId,
-            money: itemCount * itemPrice,
+            money: itemCount <= 0 ? 1 * itemPrice : itemCount * itemPrice,
             incomeTrue,
             paymentType,
             accountCode,
@@ -85,7 +85,8 @@ export default {
                 connect: {id: existsCompany.inNoutId},
                 update: {
                   budget: {
-                    increment: itemCount * itemPrice,
+                    increment:
+                      itemCount <= 0 ? 1 * itemPrice : itemCount * itemPrice,
                   },
                 },
               },
@@ -100,7 +101,8 @@ export default {
                 connect: {id: existsCompany.inNoutId},
                 update: {
                   budget: {
-                    decrement: itemCount * itemPrice,
+                    decrement:
+                      itemCount <= 0 ? 1 * itemPrice : itemCount * itemPrice,
                   },
                 },
               },
