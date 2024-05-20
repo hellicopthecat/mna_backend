@@ -10,8 +10,8 @@ export default {
         {
           username,
           companyName,
-          beforeTaxMonthlySalary,
-          annualSalary,
+          preTaxMonthlySalary,
+          familyCount,
         }: User & Company & Salary,
         {logginUser}
       ) => {
@@ -33,8 +33,8 @@ export default {
         }
         const createSalary = await client.salary.create({
           data: {
-            beforeTaxMonthlySalary,
-            annualSalary,
+            preTaxMonthlySalary,
+            familyCount,
             user: {connect: {id: existsUser.id}},
             company: {connect: {id: checkAdmin.id}},
           },

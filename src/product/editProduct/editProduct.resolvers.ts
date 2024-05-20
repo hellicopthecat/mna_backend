@@ -47,7 +47,7 @@ export default {
             errorMsg: "해당상품이 없습니다..",
           };
         }
-        const editProduct = await client.product.update({
+        const updateProduct = await client.product.update({
           where: {id},
           data: {
             itemModelName,
@@ -73,15 +73,16 @@ export default {
           },
         });
 
-        if (!editProduct) {
+        if (updateProduct) {
+          return {
+            ok: true,
+          };
+        } else {
           return {
             ok: false,
             errorMsg: "해당 생산품 정보를 업데이트하는데 실패했습니다.",
           };
         }
-        return {
-          ok: true,
-        };
       }
     ),
   },

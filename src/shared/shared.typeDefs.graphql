@@ -2,6 +2,7 @@ type ResultResponse {
   ok: Boolean!
   errorMsg: String
   id: Int
+  subId: Int
 }
 type LoginResultResponse {
   ok: Boolean!

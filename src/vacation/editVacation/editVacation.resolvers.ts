@@ -1,6 +1,7 @@
 import {Company, User, Vacation} from "@prisma/client";
 import {protectResolver} from "../../user/user.util";
 import client from "../../prismaClient";
+import {annualCalculator} from "../vacation.util";
 
 export default {
   Mutation: {
@@ -10,10 +11,8 @@ export default {
         {
           username,
           companyName,
-          totalVacation,
-          restVacation,
-          specialVation,
-          sickLeave,
+          annual,
+          joinCompanyDate,
         }: User & Company & Vacation,
         {logginUser}
       ) => {
@@ -44,7 +43,10 @@ export default {
         }
         const editVacation = await client.vacation.update({
           where: {id: findVacation.id},
-          data: {totalVacation, restVacation, specialVation, sickLeave},
+          data: {
+            annual: annualCalculator(joinCompanyDate) || annual,
+            joinCompanyDate,
+          },
         });
         if (!editVacation) {
           return {ok: false, errorMsg: "휴가생성에 실패하였습니다."};

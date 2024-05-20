@@ -1,6 +1,7 @@
 import {Company, User, Vacation} from "@prisma/client";
 import {protectResolver} from "../../user/user.util";
 import client from "../../prismaClient";
+import {annualCalculator} from "../vacation.util";
 
 export default {
   Mutation: {
@@ -10,10 +11,8 @@ export default {
         {
           username,
           companyName,
-          totalVacation,
-          restVacation,
-          specialVation,
-          sickLeave,
+          annual,
+          joinCompanyDate,
         }: User & Company & Vacation,
         {logginUser}
       ) => {
@@ -33,19 +32,30 @@ export default {
             errorMsg: "권한이 없습니다..",
           };
         }
+        const existsVacation = await client.vacation.findFirst({
+          where: {user: {username}, company: {companyName}},
+        });
+        if (existsVacation) {
+          return {
+            ok: false,
+            errorMsg: "이미 연차모델이 생성되었습니다.",
+          };
+        }
+
         const createVacation = await client.vacation.create({
           data: {
-            totalVacation,
-            restVacation,
-            specialVation,
-            sickLeave,
+            annual: annualCalculator(joinCompanyDate) || annual,
+            joinCompanyDate: Date.now().toString() || joinCompanyDate,
             company: {connect: {id: checkAdmin.id}},
             user: {connect: {id: existsUser.id}},
           },
         });
         if (!createVacation) {
-          return {ok: false, errorMsg: "휴가생성에 실패하였습니다."};
+          return {ok: false, errorMsg: "연차생성에 실패하였습니다."};
         }
+        return {
+          ok: true,
+        };
       }
     ),
   },

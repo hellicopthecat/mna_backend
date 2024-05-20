@@ -10,8 +10,8 @@ export default {
         {
           username,
           companyName,
-          beforeTaxMonthlySalary,
-          annualSalary,
+          preTaxMonthlySalary,
+          familyCount,
         }: User & Company & Salary,
         {logginUser}
       ) => {
@@ -40,8 +40,8 @@ export default {
         const updateSalary = await client.salary.update({
           where: {id: findSalary.id},
           data: {
-            beforeTaxMonthlySalary,
-            annualSalary,
+            preTaxMonthlySalary,
+            familyCount,
             user: {connect: {id: existsUser.id}},
             company: {connect: {id: checkAdmin.id}},
           },

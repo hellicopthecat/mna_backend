@@ -1,10 +1,21 @@
 type Salary {
-  id: String!
+  id: Int!
   createdAt: String!
   updateAt: String!
-  beforeTaxMonthlySalary: Int
-  afterTaxMonthlySalary: Int
+  preTaxMonthlySalary: Int
+  childCount: Int
   annualSalary: Int
+  earnIncomeDedution: Int
+  earnIncomeAmount: Int
+  familyDedution: Int
+  pensionInsuranceDedution: Int
+  specialIncomeDedution: Int
+  taxBase: Int
+  taxCalculate: Int
+  taxDetermined: Int
+  earnIncomeTaxCredit: Int
+  simplifiedTax: Int
+  childTax: Int
   user: User!
   company: Company!
 }

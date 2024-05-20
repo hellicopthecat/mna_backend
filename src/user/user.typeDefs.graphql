@@ -8,6 +8,7 @@ type User {
   lastName: String
   avatar: String
   phone: String
+  isOnVacation: Boolean
   vacation: [Vacation]
   salary: [Salary]
   ownCompany: [Company]

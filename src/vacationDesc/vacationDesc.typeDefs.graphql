@@ -1,0 +1,16 @@
+enum TVacation {
+  ANNUAL
+  SICK
+  HALF
+  OTHER
+  OTHERSICK
+  NONPAID
+}
+type VacationDesc {
+  id: Int!
+  createdAt: String!
+  updateAt: String!
+  vacationType: TVacation!
+  day: Int!
+  description: String!
+}

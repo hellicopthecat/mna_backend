@@ -2,9 +2,7 @@ type Mutation {
   editVacation(
     username: String!
     companyName: String!
-    totalVacation: Int
-    restVacation: Int
-    specialVation: Int
-    sickLeave: Int
+    annual: Int
+    joinCompanyDate: String
   ): ResultResponse!
 }

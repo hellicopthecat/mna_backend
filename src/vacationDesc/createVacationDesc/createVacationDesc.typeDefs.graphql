@@ -1,0 +1,8 @@
+type Mutation {
+  createVacationDesc(
+    id: Int!
+    day: Int!
+    vacationType: TVacation!
+    description: String!
+  ): ResultResponse!
+}

@@ -8,48 +8,71 @@ datasource db {
 }
 
 model User {
-  id         Int        @id @default(autoincrement())
-  createdAt  DateTime   @default(now())
-  updateAt   DateTime   @updatedAt
-  username   String     @unique
-  email      String     @unique
-  phone      String     @unique
-  password   String
-  firstName  String?
-  lastName   String?
-  avatar     String?
-  vacation   Vacation[] @relation(name: "Vacation")
-  salary     Salary[]
-  ownCompany Company[]  @relation(name: "OwnedBy")
-  isManage   Company[]  @relation(name: "Manager")
-  myCompany  Company[]  @relation(name: "Worker")
+  id           Int        @id @default(autoincrement())
+  createdAt    DateTime   @default(now())
+  updateAt     DateTime   @updatedAt
+  username     String     @unique
+  email        String     @unique
+  phone        String     @unique
+  password     String
+  firstName    String?
+  lastName     String?
+  avatar       String?
+  isOnVacation Boolean?   @default(false)
+  vacation     Vacation[] @relation(name: "Vacation")
+  salary       Salary[]
+  ownCompany   Company[]  @relation(name: "OwnedBy")
+  isManage     Company[]  @relation(name: "Manager")
+  myCompany    Company[]  @relation(name: "Worker")
 }
 
 model Salary {
-  id                     Int      @id @default(autoincrement())
-  createdAt              DateTime @default(now())
-  updateAt               DateTime @updatedAt
-  beforeTaxMonthlySalary Int?
-  annualSalary           Int?
-  company                Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  companyId              Int
-  userId                 Int
+  id                  Int      @id @default(autoincrement())
+  createdAt           DateTime @default(now())
+  updateAt            DateTime @updatedAt
+  preTaxMonthlySalary Int?
+  familyCount         Int?
+  childCount          Int?
+  company             Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyId           Int
+  userId              Int
 }
 
 model Vacation {
-  id            Int      @id @default(autoincrement())
-  createdAt     DateTime @default(now())
-  updateAt      DateTime @updatedAt
-  totalVacation Int?
-  restVacation  Int?
-  specialVation Int?
-  sickLeave     Int?
-  company       Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  user          User     @relation(name: "Vacation", fields: [userId], references: [id])
+  id              Int            @id @default(autoincrement())
+  createdAt       DateTime       @default(now())
+  updateAt        DateTime       @updatedAt
+  joinCompanyDate String
+  appearence      Int            @default(0)
+  annual          Int?
+  other           Int            @default(0)
+  description     VacationDesc[]
+  company         Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user            User           @relation(name: "Vacation", fields: [userId], references: [id])
 
   companyId Int
   userId    Int
+}
+
+enum TVacation {
+  ANNUAL
+  SICK
+  HALF
+  OTHER
+  OTHERSICK
+  NONPAID
+}
+
+model VacationDesc {
+  id           Int       @id @default(autoincrement())
+  createdAt    DateTime  @default(now())
+  updateAt     DateTime  @updatedAt
+  vacationType TVacation
+  day          Int
+  description  String
+  Vacation     Vacation? @relation(fields: [vacationId], references: [id])
+  vacationId   Int?
 }
 
 model Company {

@@ -261,7 +261,9 @@ export default {
         where: {id},
         select: {inNoutDesc: true},
       });
-      const income = inNoutDesc.filter((item) => item.incomeTrue);
+      const income = inNoutDesc.filter(
+        (item) => item.incomeTrue && item.paymentsDone === "PAID"
+      );
       return income;
     }, // 수익모델
     incomeMoney: async ({id}: InNout) => {
@@ -285,7 +287,9 @@ export default {
         where: {id},
         select: {inNoutDesc: true},
       });
-      const expend = inNoutDesc.filter((item) => !item.incomeTrue);
+      const expend = inNoutDesc.filter(
+        (item) => !item.incomeTrue && item.paymentsDone === "PAID"
+      );
       return expend;
     }, // 지출모델
     expendMoney: async ({id}: InNout) => {

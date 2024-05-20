@@ -98,11 +98,32 @@ export default {
       });
       return inNout;
     },
-    companyWorker: async ({id}: Company) =>
-      await client.company.findUnique({where: {id}, select: {worker: true}}),
-    workerVacation: async ({id}: Company) =>
-      await client.company.findUnique({where: {id}, select: {Vacation: true}}),
-    workerSalary: async ({id}: Company) =>
-      await client.company.findUnique({where: {id}, select: {Salary: true}}),
+    companyWorker: async ({id}: Company) => {
+      const {worker} = await client.company.findFirst({
+        where: {id},
+        select: {
+          worker: {include: {vacation: {where: {companyId: id}}}},
+        },
+      });
+      const workers = worker.filter((items) =>
+        items.vacation.filter((item) => item.companyId === id)
+      );
+      return workers;
+    },
+    workerVacation: async ({id}: Company) => {
+      const {Vacation} = await client.company.findUnique({
+        where: {id},
+        select: {Vacation: true},
+      });
+      const vacation = Vacation.filter((item) => item.companyId === id);
+      return vacation;
+    },
+    workerSalary: async ({id}: Company) => {
+      const {Salary} = await client.company.findUnique({
+        where: {id},
+        select: {Salary: true},
+      });
+      return Salary;
+    },
   },
 } as Resolvers;

@@ -1,10 +1,31 @@
 type Vacation {
-  id: String!
+  id: Int!
   createdAt: String!
   updateAt: String!
-  totalVacation: Int
+  joinCompanyDate: String!
+  annual: Int
+  other: Int
+  description: [VacationDesc]
+  useAnnualVacation: Int
   restVacation: Int
-  specialVation: Int
-  sickLeave: Int
   user: User!
+  company: Company!
+  companyId: Int
+}
+enum TVacation {
+  ANNUAL
+  SICK
+  HALF
+  OTHER
+  OTHERSICK
+  NONPAID
+}
+
+type VacationDesc {
+  id: Int!
+  createdAt: String!
+  updateAt: String!
+  vacationType: TVacation!
+  day: Int!
+  description: String!
 }

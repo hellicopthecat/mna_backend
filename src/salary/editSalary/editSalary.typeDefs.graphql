@@ -2,7 +2,7 @@ type Mutation {
   editSalary(
     username: String!
     companyName: String!
-    beforeTaxMonthlySalary: Int
-    annualSalary: Int
+    preTaxMonthlySalary: Int
+    familyCount: Int
   ): ResultResponse!
 }

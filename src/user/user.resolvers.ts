@@ -1,16 +1,9 @@
 import {Resolvers} from "../types";
 import client from "../prismaClient";
-import {User} from "@prisma/client";
+import {Company, User} from "@prisma/client";
 
 export default {
   User: {
-    vacation: async ({id}: User) => {
-      const {vacation} = await client.user.findFirst({
-        where: {id},
-        select: {vacation: true},
-      });
-      return vacation;
-    },
     salary: async ({id}: User) => {
       const {salary} = await client.user.findFirst({
         where: {id},
