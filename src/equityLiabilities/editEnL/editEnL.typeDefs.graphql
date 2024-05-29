@@ -1,6 +1,6 @@
 type Mutation {
   editEnL(
-    companyName: String!
+    id: Int!
     enLId: String!
     enLName: String
     enLType: String

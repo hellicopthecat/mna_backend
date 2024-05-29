@@ -5,13 +5,12 @@ import {protectResolver} from "../../user/user.util";
 
 export default {
   Query: {
-    searchCompany: protectResolver(
-      async (_, {companyName}: Company, {logginUser}) => {
-        const resultCompany = await client.company.findUnique({
-          where: {companyName, companyManager: {some: {id: logginUser.id}}},
-        });
-        return resultCompany;
-      }
-    ),
+    searchCompany: protectResolver(async (_, {id}: Company) => {
+      const resultCompany = await client.company.findUnique({
+        where: {id},
+      });
+
+      return resultCompany;
+    }),
   },
 } as Resolvers;

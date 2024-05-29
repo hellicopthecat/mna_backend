@@ -40,16 +40,19 @@ model Salary {
 }
 
 model Vacation {
-  id              Int            @id @default(autoincrement())
-  createdAt       DateTime       @default(now())
-  updateAt        DateTime       @updatedAt
-  joinCompanyDate String
-  appearence      Int            @default(0)
-  annual          Int?
-  other           Int            @default(0)
-  description     VacationDesc[]
-  company         Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  user            User           @relation(name: "Vacation", fields: [userId], references: [id])
+  id                 Int            @id @default(autoincrement())
+  createdAt          DateTime       @default(now())
+  updateAt           DateTime       @updatedAt
+  joinCompanyDate    String
+  annual             Float
+  other              Float          @default(0)
+  restAnnualVacation Float          @default(0)
+  restOtherVacation  Float          @default(0)
+  totalVacation      Float
+  appearence         Int            @default(0)
+  description        VacationDesc[]
+  company            Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user               User           @relation(name: "Vacation", fields: [userId], references: [id])
 
   companyId Int
   userId    Int
@@ -69,9 +72,9 @@ model VacationDesc {
   createdAt    DateTime  @default(now())
   updateAt     DateTime  @updatedAt
   vacationType TVacation
-  day          Int
+  day          Float     @default(1)
   description  String
-  Vacation     Vacation? @relation(fields: [vacationId], references: [id])
+  Vacation     Vacation? @relation(fields: [vacationId], references: [id], onDelete: Cascade)
   vacationId   Int?
 }
 
@@ -114,7 +117,7 @@ model Product {
   createdAt     DateTime       @default(now())
   updateAt      DateTime       @updatedAt
   company       Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  itemProductId String         @unique
+  itemProductId String
   itemName      String // 제품이름
   itemModelName String? // 제품 모델명
   itemPhoto     String?
@@ -123,8 +126,7 @@ model Product {
   itemPrice     Int?
   itemDesc      String?
   incomeExpend  IncomeExpend[]
-
-  companyId Int
+  companyId     Int
 }
 
 model InNout {

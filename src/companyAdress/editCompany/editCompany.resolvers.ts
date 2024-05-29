@@ -8,7 +8,7 @@ export default {
       async (
         _,
         {
-          companyName,
+          id,
           country,
           city,
           streetAdress,
@@ -20,7 +20,7 @@ export default {
         try {
           //Exists Company
           const existsCompany = await client.company.findFirst({
-            where: {companyName},
+            where: {id},
           });
           if (!existsCompany) {
             return {
@@ -29,7 +29,7 @@ export default {
             };
           }
           const adminUser = await client.user.findUnique({
-            where: {id: logginUser.id, isManage: {some: {companyName}}},
+            where: {id: logginUser.id, isManage: {some: {id}}},
           });
           if (!adminUser) {
             return {

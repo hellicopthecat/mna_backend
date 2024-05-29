@@ -8,7 +8,7 @@ export default {
       async (
         _,
         {
-          companyName,
+          id,
           enLId,
           enLName,
           enLType,
@@ -20,7 +20,7 @@ export default {
         {logginUser}
       ) => {
         const existsAdmin = await client.company.findUnique({
-          where: {companyName, companyManager: {some: {id: logginUser.id}}},
+          where: {id, companyManager: {some: {id: logginUser.id}}},
         });
         if (!existsAdmin) {
           return {

@@ -3,11 +3,13 @@ type Vacation {
   createdAt: String!
   updateAt: String!
   joinCompanyDate: String!
-  annual: Int
-  other: Int
+  appearence: Int
+  annual: Float
+  other: Float
+  restAnnualVacation: Float
+  restOtherVacation: Float
+  totalVacation: Float
   description: [VacationDesc]
-  useAnnualVacation: Int
-  restVacation: Int
   user: User!
   company: Company!
   companyId: Int

@@ -1,18 +1,16 @@
 //근로소득공제금액
 export const earnIncomeDedution = (totalIncome: number) => {
-  let dedution: number;
   if (totalIncome <= 5_000_000) {
-    dedution = totalIncome * 0.7;
+    return totalIncome * 0.7;
   } else if (totalIncome <= 15_000_000) {
-    dedution = 3_500_000 + (totalIncome - 5_000_000) * 0.4;
+    return 3_500_000 + (totalIncome - 5_000_000) * 0.4;
   } else if (totalIncome <= 45_000_000) {
-    dedution = 7_500_000 + (totalIncome - 15_000_000) * 0.15;
+    return 7_500_000 + (totalIncome - 15_000_000) * 0.15;
   } else if (totalIncome <= 100_000_000) {
-    dedution = 12_000_000 + (totalIncome - 45_000_000) * 0.05;
+    return 12_000_000 + (totalIncome - 45_000_000) * 0.05;
   } else if (totalIncome > 100_000_000) {
-    dedution = 14_750_000 + (totalIncome - 100_000_000) * 0.02;
+    return 14_750_000 + (totalIncome - 100_000_000) * 0.02;
   }
-  return totalIncome - dedution;
 };
 //인적공제 (가족)
 export const familyDedution = (headCount: number) => {
@@ -21,11 +19,15 @@ export const familyDedution = (headCount: number) => {
 //연금보험료공제
 export const pensionInsuranceDedution = (monthIncome: number) => {
   if (monthIncome <= 290_000) {
-    return Math.floor((290_000 * 0.045) / 10) * 10 * 12;
+    return Math.floor((290_000 * 0.045) / 100) * 100 * 12 < 156_600
+      ? 156_600
+      : Math.floor((290_000 * 0.045) / 100) * 100 * 12;
   } else if (monthIncome >= 4_490_000) {
-    return Math.floor((4_490_000 * 0.045) / 10) * 10 * 12;
+    return Math.floor((4_490_000 * 0.045) / 100) * 100 * 12 > 2_424_600
+      ? 2_424_600
+      : Math.floor((4_490_000 * 0.045) / 100) * 100 * 12;
   } else {
-    return Math.floor((monthIncome * 0.045) / 10) * 10 * 12;
+    return Math.floor((monthIncome * 0.045) / 100) * 100 * 12;
   }
 };
 //특별소득공제
@@ -35,48 +37,40 @@ export const specialIncomeDedution = (
 ) => {
   if (totalIncome <= 30_000_000) {
     if (familiCount === 1) {
-      return 3_100_000 + totalIncome * 0.004;
+      return 3_100_000 + totalIncome * 0.04;
     } else if (familiCount === 2) {
-      return 3_600_000 + totalIncome * 0.004;
+      return 3_600_000 + totalIncome * 0.04;
     } else if (familiCount >= 3) {
-      return (
-        5_000_000 + totalIncome * 0.007 + (totalIncome - 40_000_000) * 0.004
-      );
+      return 5_000_000 + totalIncome * 0.07 + (totalIncome - 40_000_000) * 0.04;
     }
   } else if (totalIncome > 30_000_000 && totalIncome <= 45_000_000) {
     if (familiCount === 1) {
-      return (
-        3_100_000 + totalIncome * 0.004 - (totalIncome - 30_000_000) * 0.005
-      );
+      return 3_100_000 + totalIncome * 0.04 - (totalIncome - 30_000_000) * 0.05;
     } else if (familiCount === 2) {
-      return (
-        3_600_000 + totalIncome * 0.004 - (totalIncome - 30_000_000) * 0.005
-      );
+      return 3_600_000 + totalIncome * 0.04 - (totalIncome - 30_000_000) * 0.05;
     } else if (familiCount >= 3) {
       return (
-        3_600_000 +
-        totalIncome * 0.004 -
-        (totalIncome - 30_000_000) * 0.005 +
-        (totalIncome - 40_000_000) * 0.004
+        5_000_000 +
+        totalIncome * 0.07 -
+        (totalIncome - 30_000_000) * 0.05 +
+        (totalIncome - 40_000_000) * 0.04
       );
     }
   } else if (totalIncome > 45_000_000 && totalIncome <= 70_000_000) {
     if (familiCount === 1) {
       return 3_100_000 + totalIncome * 0.015;
     } else if (familiCount === 2) {
-      return 3_600_000 + totalIncome * 0.002;
+      return 3_600_000 + totalIncome * 0.02;
     } else if (familiCount >= 3) {
-      return (
-        5_000_000 + totalIncome * 0.005 + (totalIncome - 40_000_000) * 0.004
-      );
+      return 5_000_000 + totalIncome * 0.05 + (totalIncome - 40_000_000) * 0.04;
     }
   } else if (totalIncome > 70_000_000 && totalIncome <= 120_000_000) {
     if (familiCount === 1) {
       return 3_100_000 + totalIncome * 0.005;
     } else if (familiCount === 2) {
-      return 3_600_000 + totalIncome * 0.001;
+      return 3_600_000 + totalIncome * 0.01;
     } else if (familiCount >= 3) {
-      5_000_000 + totalIncome * 0.003 + (totalIncome - 40_000_000) * 0.004;
+      5_000_000 + totalIncome * 0.03 + (totalIncome - 40_000_000) * 0.04;
     }
   }
 };
@@ -90,19 +84,23 @@ export const taxBase = (
 //산출세액
 export const taxCalculate = (taxBase: number) => {
   if (taxBase <= 12_000_000) {
-    return taxBase * 0.6;
+    return Math.floor((taxBase * 0.06) / 100) * 100;
   } else if (taxBase > 12_000_000 && taxBase <= 46_000_000) {
-    return 720_000 + (taxBase - 12_000_000) * 0.15;
+    return Math.floor((720_000 + (taxBase - 12_000_000) * 0.15) / 100) * 100;
   } else if (taxBase > 46_000_000 && taxBase <= 88_000_000) {
-    return 5_820_000 + (taxBase - 46_000_000) * 0.24;
+    return Math.floor((5_820_000 + (taxBase - 46_000_000) * 0.24) / 100) * 100;
   } else if (taxBase > 88_000_000 && taxBase <= 150_000_000) {
-    return 15_900_000 + (taxBase - 88_000_000) * 0.35;
+    return Math.floor((15_900_000 + (taxBase - 88_000_000) * 0.35) / 100) * 100;
   } else if (taxBase > 150_000_000 && taxBase <= 300_000_000) {
-    return 37_600_000 + (taxBase - 150_000_000) * 0.38;
+    return (
+      Math.floor((37_600_000 + (taxBase - 150_000_000) * 0.38) / 100) * 100
+    );
   } else if (taxBase > 300_000_000 && taxBase <= 500_000_000) {
-    return 94_600_000 + (taxBase - 300_000_000) * 0.4;
+    return Math.floor((94_600_000 + (taxBase - 300_000_000) * 0.4) / 100) * 100;
   } else if (taxBase > 500_000_000) {
-    return 174_600_000 + (taxBase - 500_000_000) * 0.42;
+    return (
+      Math.floor((174_600_000 + (taxBase - 500_000_000) * 0.42) / 100) * 100
+    );
   }
 };
 //근소소득세액공제

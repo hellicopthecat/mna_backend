@@ -1,26 +1,16 @@
-import {Company} from "@prisma/client";
 import {protectResolver} from "../../user/user.util";
 import client from "../../prismaClient";
-type TargetCompany = {
-  targetCompany: string;
-};
+interface ICustomArgs {
+  companyId: number;
+  targetCompanyId: number;
+}
 export default {
   Mutation: {
     connectCompany: protectResolver(
-      async (
-        _,
-        {companyName: myCompany, targetCompany}: Company & TargetCompany,
-        {logginUser}
-      ) => {
-        if (!myCompany || !targetCompany) {
-          return {
-            ok: false,
-            errorMsg: "회사명이 입력되지 않았습니다.",
-          };
-        }
+      async (_, {companyId, targetCompanyId}: ICustomArgs, {logginUser}) => {
         const adminUserCompany = await client.company.findUnique({
           where: {
-            companyName: myCompany,
+            id: companyId,
             companyManager: {some: {id: logginUser.id}},
           },
         });
@@ -29,14 +19,14 @@ export default {
             ok: false,
             errorMsg: "권한이 없습니다.",
           };
-        } else if (adminUserCompany.companyName === targetCompany) {
+        } else if (adminUserCompany.id === targetCompanyId) {
           return {
             ok: false,
             errorMsg: "자사는 거래처로 등록될 수 없습니다.",
           };
         }
         const findTargetCompany = await client.company.findUnique({
-          where: {companyName: targetCompany},
+          where: {id: targetCompanyId},
         });
         if (!findTargetCompany) {
           return {
@@ -47,7 +37,7 @@ export default {
         const connectCompany = await client.company.update({
           where: {id: adminUserCompany.id},
           data: {
-            connectedCompany: {connect: {companyName: targetCompany}},
+            connectedCompany: {connect: {id: targetCompanyId}},
           },
         });
         if (!connectCompany) {

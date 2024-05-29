@@ -1,13 +1,14 @@
 import {Company, User} from "@prisma/client";
 import {protectResolver} from "../../user/user.util";
 import client from "../../prismaClient";
+import {annualCalculator} from "../../vacation/vacation.util";
 
 export default {
   Mutation: {
     registWorker: protectResolver(
-      async (_, {username, companyName}: User & Company, {logginUser}) => {
+      async (_, {username, id}: User & Company, {logginUser}) => {
         const checkAdmin = await client.company.findFirst({
-          where: {companyName, companyManager: {some: {id: logginUser.id}}},
+          where: {id, companyManager: {some: {id: logginUser.id}}},
         });
         if (!checkAdmin) {
           return {ok: false, errorMsg: "권한이 없습니다."};
@@ -19,12 +20,14 @@ export default {
         const createVacation = await client.vacation.create({
           data: {
             joinCompanyDate: Date.now().toString(),
+            annual: annualCalculator(Date.now().toString()),
+            totalVacation: annualCalculator(Date.now().toString()),
             user: {connect: {id: existsWorker.id}},
             company: {connect: {id: checkAdmin.id}},
           },
         });
         const registWorkerResult = await client.company.update({
-          where: {companyName},
+          where: {id},
           data: {
             worker: {connect: {id: existsWorker.id}},
             Vacation: {connect: {id: createVacation.id}},

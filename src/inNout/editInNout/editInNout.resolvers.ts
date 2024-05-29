@@ -7,22 +7,16 @@ export default {
     editInNout: protectResolver(
       async (
         _,
-        {
-          companyName,
-          accountName,
-          accountNum,
-          accountDesc,
-          budget,
-        }: Company & InNout,
+        {id, accountName, accountNum, accountDesc, budget}: Company & InNout,
         {logginUser}
       ) => {
         const {
-          companyName: existsCompany,
+          id: existsCompany,
           companyManager,
           inNoutId,
         } = await client.company.findUnique({
-          where: {companyName, companyManager: {some: {id: logginUser.id}}},
-          select: {companyName: true, companyManager: true, inNoutId: true},
+          where: {id, companyManager: {some: {id: logginUser.id}}},
+          select: {id: true, companyManager: true, inNoutId: true},
         });
         if (!existsCompany) {
           return {

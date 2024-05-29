@@ -12,7 +12,7 @@ type Mutation {
     paymentType: String
     accountCode: String
     businessDesc: String
-    companyName: String!
+    id: Int!
     paymentsDone: TPaymentSwitch
   ): ResultResponse!
 }

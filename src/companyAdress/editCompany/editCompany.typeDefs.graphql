@@ -1,6 +1,6 @@
 type Mutation {
   editCompanyAdress(
-    companyName: String!
+    id: Int!
     country: String
     city: String
     streetAdress: String

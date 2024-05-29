@@ -8,14 +8,15 @@ export default {
       async (
         _,
         {
-          username,
+          id,
           companyName,
           preTaxMonthlySalary,
           familyCount,
+          childCount,
         }: User & Company & Salary,
         {logginUser}
       ) => {
-        const existsUser = await client.user.findFirst({where: {username}});
+        const existsUser = await client.user.findFirst({where: {id}});
         if (!existsUser) {
           return {
             ok: false,
@@ -35,6 +36,7 @@ export default {
           data: {
             preTaxMonthlySalary,
             familyCount,
+            childCount,
             user: {connect: {id: existsUser.id}},
             company: {connect: {id: checkAdmin.id}},
           },

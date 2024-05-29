@@ -1,30 +1,21 @@
-import {Company, User, Vacation} from "@prisma/client";
+import {Vacation} from "@prisma/client";
 import {protectResolver} from "../../user/user.util";
 import client from "../../prismaClient";
 import {annualCalculator} from "../vacation.util";
-
+interface ICustomArgs {
+  companyId: number;
+  vacationId: number;
+}
 export default {
   Mutation: {
     editVacation: protectResolver(
       async (
         _,
-        {
-          username,
-          companyName,
-          annual,
-          joinCompanyDate,
-        }: User & Company & Vacation,
+        {vacationId, companyId, other, joinCompanyDate}: ICustomArgs & Vacation,
         {logginUser}
       ) => {
-        const existsUser = await client.user.findFirst({where: {username}});
-        if (!existsUser) {
-          return {
-            ok: false,
-            errorMsg: "유저가 존재하지 않습니다.",
-          };
-        }
         const checkAdmin = await client.company.findFirst({
-          where: {companyName, companyManager: {some: {id: logginUser.id}}},
+          where: {id: companyId, companyManager: {some: {id: logginUser.id}}},
         });
         if (!checkAdmin) {
           return {
@@ -33,7 +24,7 @@ export default {
           };
         }
         const findVacation = await client.vacation.findFirst({
-          where: {userId: existsUser.id, companyId: checkAdmin.id},
+          where: {id: vacationId, companyId: checkAdmin.id},
         });
         if (!findVacation) {
           return {
@@ -44,8 +35,12 @@ export default {
         const editVacation = await client.vacation.update({
           where: {id: findVacation.id},
           data: {
-            annual: annualCalculator(joinCompanyDate) || annual,
             joinCompanyDate,
+            annual: annualCalculator(joinCompanyDate),
+            other,
+            restAnnualVacation: annualCalculator(joinCompanyDate),
+            restOtherVacation: other,
+            totalVacation: annualCalculator(joinCompanyDate) + other,
           },
         });
         if (!editVacation) {

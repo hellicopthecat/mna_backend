@@ -21,33 +21,25 @@ export default {
           paymentType,
           accountCode,
           businessDesc,
-          companyName,
+          id,
           paymentsDone,
         }: Product & IncomeExpend & Company,
         {logginUser}
       ) => {
         const adminUser = await client.company.findFirst({
-          where: {companyName, companyManager: {some: {id: logginUser.id}}},
+          where: {id, companyManager: {some: {id: logginUser.id}}},
         });
         if (!adminUser) {
           return {ok: false, errorMsg: "해당 회사에 권한이 없습니다."};
         }
 
         const existsCompany = await client.company.findUnique({
-          where: {companyName},
+          where: {id},
         });
         if (!existsCompany) {
           return {ok: false, errorMsg: "회사가 존재하지 않습니다."};
         }
-        const existsProductId = await client.product.findUnique({
-          where: {itemProductId},
-        });
-        if (existsProductId) {
-          return {
-            ok: false,
-            errorMsg: "프로젝트아이디가 존재합니다.",
-          };
-        }
+
         const createIncomeExpend = await client.incomeExpend.create({
           data: {
             infoSubtitle: itemProductId,
@@ -69,7 +61,7 @@ export default {
             itemCount,
             itemPrice,
             itemDesc,
-            company: {connect: {companyName}},
+            company: {connect: {id}},
           },
         });
         let updateIncomeExpend: any;
@@ -121,7 +113,7 @@ export default {
         }
 
         const updateCompanyInNout = await client.company.update({
-          where: {companyName},
+          where: {id},
           data: {
             inNout: {
               update: {
@@ -140,6 +132,7 @@ export default {
         }
         return {
           ok: true,
+          id: createProduct.id,
         };
       }
     ),

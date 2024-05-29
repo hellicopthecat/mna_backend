@@ -8,12 +8,7 @@ export default {
     createVacation: protectResolver(
       async (
         _,
-        {
-          username,
-          companyName,
-          annual,
-          joinCompanyDate,
-        }: User & Company & Vacation,
+        {username, id, other, joinCompanyDate}: User & Company & Vacation,
         {logginUser}
       ) => {
         const existsUser = await client.user.findFirst({where: {username}});
@@ -24,7 +19,7 @@ export default {
           };
         }
         const checkAdmin = await client.company.findFirst({
-          where: {companyName, companyManager: {some: {id: logginUser.id}}},
+          where: {id, companyManager: {some: {id: logginUser.id}}},
         });
         if (!checkAdmin) {
           return {
@@ -33,7 +28,7 @@ export default {
           };
         }
         const existsVacation = await client.vacation.findFirst({
-          where: {user: {username}, company: {companyName}},
+          where: {user: {username}, company: {id}},
         });
         if (existsVacation) {
           return {
@@ -44,8 +39,12 @@ export default {
 
         const createVacation = await client.vacation.create({
           data: {
-            annual: annualCalculator(joinCompanyDate) || annual,
             joinCompanyDate: Date.now().toString() || joinCompanyDate,
+            annual: annualCalculator(joinCompanyDate),
+            other,
+            restAnnualVacation: annualCalculator(joinCompanyDate),
+            restOtherVacation: other,
+            totalVacation: annualCalculator(joinCompanyDate) + other,
             company: {connect: {id: checkAdmin.id}},
             user: {connect: {id: existsUser.id}},
           },

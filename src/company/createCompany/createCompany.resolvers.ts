@@ -35,6 +35,7 @@ export default {
               companyOwner: {connect: {id: logginUser.id}},
               companyAdress: {connect: {id: createCompanyAdress.id}},
               companyManager: {connect: {id: logginUser.id}},
+              worker: {connect: {id: logginUser.id}},
               inNout: {connect: {id: createCompanyAssets.id}},
             },
           });
@@ -46,6 +47,7 @@ export default {
           } else {
             return {
               ok: true,
+              id: createCompany.id,
             };
           }
         } catch (err) {

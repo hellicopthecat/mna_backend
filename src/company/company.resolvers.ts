@@ -50,34 +50,34 @@ export default {
       const manager = targetCompany.map((worker) => worker.companyManager);
       return manager[0];
     },
-    connectedCompany: async ({id}: Company, __, {logginUser}) => {
+    connectedCompany: async ({id}: Company) => {
       const {connectedCompany} = await client.company.findUnique({
-        where: {id, companyManager: {some: {id: logginUser.id}}},
+        where: {id},
         select: {
           connectedCompany: {skip: 0, take: 5, orderBy: {createdAt: "desc"}},
         },
       });
       return connectedCompany;
     },
-    connectedCompanyCount: async ({id}: Company, __, {logginUser}) => {
+    connectedCompanyCount: async ({id}: Company) => {
       const {connectedCompany} = await client.company.findUnique({
-        where: {id, companyManager: {some: {id: logginUser.id}}},
+        where: {id},
         select: {connectedCompany: true},
       });
       return connectedCompany.length;
     },
-    connectingCompany: async ({id}: Company, __, {logginUser}) => {
+    connectingCompany: async ({id}: Company) => {
       const {connectingCompany} = await client.company.findUnique({
-        where: {id, companyManager: {some: {id: logginUser.id}}},
+        where: {id},
         select: {
           connectingCompany: {skip: 0, take: 5, orderBy: {createdAt: "desc"}},
         },
       });
       return connectingCompany;
     },
-    connectingCompanyCount: async ({id}: Company, __, {logginUser}) => {
+    connectingCompanyCount: async ({id}: Company) => {
       const {connectingCompany} = await client.company.findUnique({
-        where: {id, companyManager: {some: {id: logginUser.id}}},
+        where: {id},
         select: {connectingCompany: true},
       });
       return connectingCompany.length;

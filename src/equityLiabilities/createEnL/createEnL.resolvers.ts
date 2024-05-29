@@ -8,7 +8,7 @@ export default {
       async (
         _,
         {
-          companyName,
+          id,
           enLId,
           enLName,
           enLType,
@@ -21,7 +21,7 @@ export default {
       ) => {
         const existsAdmin = await client.company.findFirst({
           where: {
-            companyName,
+            id,
             OR: [
               {companyManager: {some: {id: logginUser.id}}},
               {companyOwner: {id: logginUser.id}},
@@ -63,7 +63,6 @@ export default {
             errorMsg: "자산을 생성하는데 실패하였습니다.",
           };
         }
-        console.log(createEnL.id);
         return {
           ok: true,
           id: createEnL.id,

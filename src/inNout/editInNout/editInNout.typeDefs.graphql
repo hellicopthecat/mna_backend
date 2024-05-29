@@ -1,6 +1,6 @@
 type Mutation {
   editInNout(
-    companyName: String!
+    id: Int!
     accountNum: String
     accountName: String
     accountDesc: String

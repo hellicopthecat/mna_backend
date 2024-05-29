@@ -3,6 +3,7 @@ type Salary {
   createdAt: String!
   updateAt: String!
   preTaxMonthlySalary: Int
+  familyCount: Int
   childCount: Int
   annualSalary: Int
   earnIncomeDedution: Int
