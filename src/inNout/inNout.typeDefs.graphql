@@ -31,4 +31,8 @@ type InNout {
   incomeMoney: Int
   expendModel: [IncomeExpend]
   expendMoney: Int
+  waitIncomeModel: [IncomeExpend]
+  waitIncomeMoney: Int
+  waitExpendModel: [IncomeExpend]
+  waitExpendMoney: Int
 }

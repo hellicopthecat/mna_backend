@@ -198,10 +198,10 @@ export default {
       const expenseValue = expense.map((income) => income.money);
       const totalRevenue = reduceAssets(revenueValue);
       const netIncome = reduceAssets(revenueValue) - reduceAssets(expenseValue);
-      if (totalRevenue <= 0 || netIncome <= 0) {
-        return 0;
-      }
-      return Number(((netIncome / totalRevenue) * 100).toFixed(4));
+
+      return !(netIncome / totalRevenue)
+        ? 0
+        : ((netIncome / totalRevenue) * 100).toFixed(4);
     }, // 이익률
     equityRatio: async ({id}: InNout) => {
       const {totalAssets} = await client.inNout.findUnique({
@@ -308,5 +308,53 @@ export default {
       );
       return money;
     }, // 지출금
+    waitIncomeModel: async ({id}: InNout) => {
+      const {inNoutDesc} = await client.inNout.findUnique({
+        where: {id},
+        select: {inNoutDesc: true},
+      });
+      const waitIncome = inNoutDesc.filter(
+        (item) => item.incomeTrue && item.paymentsDone === "WAIT"
+      );
+      return waitIncome;
+    },
+    waitIncomeMoney: async ({id}: InNout) => {
+      const {inNoutDesc} = await client.inNout.findUnique({
+        where: {id},
+        select: {inNoutDesc: true},
+      });
+      const waitIncome = inNoutDesc.filter(
+        (item) => item.incomeTrue && item.paymentsDone === "WAIT"
+      );
+      const {money} = waitIncome.reduce(
+        (prev, current) => ({money: prev.money + current.money}),
+        {money: 0}
+      );
+      return money;
+    },
+    waitExpendModel: async ({id}: InNout) => {
+      const {inNoutDesc} = await client.inNout.findUnique({
+        where: {id},
+        select: {inNoutDesc: true},
+      });
+      const waitExpend = inNoutDesc.filter(
+        (item) => !item.incomeTrue && item.paymentsDone === "WAIT"
+      );
+      return waitExpend;
+    },
+    waitExpendMoney: async ({id}: InNout) => {
+      const {inNoutDesc} = await client.inNout.findUnique({
+        where: {id},
+        select: {inNoutDesc: true},
+      });
+      const waitExpend = inNoutDesc.filter(
+        (item) => !item.incomeTrue && item.paymentsDone === "WAIT"
+      );
+      const {money} = waitExpend.reduce(
+        (prev, current) => ({money: prev.money + current.money}),
+        {money: 0}
+      );
+      return money;
+    },
   },
 } as Resolvers;
