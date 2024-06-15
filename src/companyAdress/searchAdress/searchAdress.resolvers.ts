@@ -6,10 +6,8 @@ export default {
   Query: {
     searchAdress: async (_, {companyName}: Company) => {
       const findAdress = await client.companyAdress.findMany({
-        where: {Company: {some: {companyName: {contains: companyName}}}},
+        where: {companyName: {contains: companyName}},
       });
-
-      console.log(findAdress);
       return findAdress;
     },
   },

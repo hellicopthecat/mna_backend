@@ -14,7 +14,7 @@ type Company {
   connectingCompany: [Company]
   connectingCompanyCount: Int!
   companyProduct: [Product]
-  companyInNout: InNout!
+  inNout: InNout!
   companyWorker: [User]
   workerVacation: [Vacation]
   workerSalary: [Salary]

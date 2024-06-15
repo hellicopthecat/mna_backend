@@ -91,7 +91,7 @@ export default {
       });
       return product.companyProduct;
     },
-    companyInNout: async ({id}: Company) => {
+    inNout: async ({id}: Company) => {
       const {inNout} = await client.company.findUnique({
         where: {id},
         select: {inNout: true},

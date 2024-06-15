@@ -27,6 +27,7 @@ export default {
       ) => {
         const existsCompany = await client.company.findUnique({
           where: {companyName, companyManager: {some: {id: logginUser.id}}},
+          include: {inNout: true},
         });
         if (!existsCompany) {
           return {
@@ -53,7 +54,7 @@ export default {
             accountCode,
             businessDesc,
             paymentsDone,
-            InNout: {connect: {id: existsCompany.inNoutId}},
+            InNout: {connect: {id: existsCompany.inNout.id}},
           },
         });
         const createEnL = await client.equityLiabilities.create({
@@ -65,7 +66,7 @@ export default {
             current,
             assests,
             value: money,
-            InNout: {connect: {id: existsCompany.inNoutId}},
+            InNout: {connect: {id: existsCompany.inNout.id}},
           },
         });
 

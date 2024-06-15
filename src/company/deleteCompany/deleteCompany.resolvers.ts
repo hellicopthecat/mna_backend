@@ -6,9 +6,10 @@ export default {
   Mutation: {
     deleteCompany: protectResolver(async (_, {id}: Company, {logginUser}) => {
       const existsCompany = await client.company.findUnique({
-        where: {id, companyOwner: {id: logginUser.id}},
+        where: {id},
+        include: {companyOwner: true},
       });
-      if (!existsCompany) {
+      if (existsCompany.companyOwner.id !== logginUser.id) {
         return {
           ok: false,
           errorMsg: "권한이 없습니다.",
@@ -17,6 +18,7 @@ export default {
       const deleteCompany = await client.company.delete({
         where: {id: existsCompany.id},
       });
+
       if (!deleteCompany) {
         return {
           ok: false,

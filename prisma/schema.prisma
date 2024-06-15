@@ -85,30 +85,30 @@ model Company {
   companyLogo       String?
   companyName       String         @unique
   companyOwner      User           @relation(name: "OwnedBy", fields: [userId], references: [id], onDelete: Cascade)
-  companyAdress     CompanyAdress? @relation(fields: [companyAdressId], references: [id], onDelete: Cascade)
   companyManager    User[]         @relation(name: "Manager")
   worker            User[]         @relation(name: "Worker")
   connectedCompany  Company[]      @relation("connectComapny") // 거래처
   connectingCompany Company[]      @relation("connectComapny") // 거래처
+  companyAdress     CompanyAdress?
   companyProduct    Product[] // 회사 상품
-  inNout            InNout?        @relation(fields: [inNoutId], references: [id], onDelete: Cascade) // 회계
+  inNout            InNout? // 회계
   userId            Int
-  companyAdressId   Int
-  inNoutId          Int
   Vacation          Vacation[]
   Salary            Salary[]
 }
 
 model CompanyAdress {
-  id           Int       @id @default(autoincrement())
-  createdAt    DateTime  @default(now())
-  updateAt     DateTime  @updatedAt
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updateAt     DateTime @updatedAt
+  companyName  String   @unique
   country      String?
   city         String?
   streetAdress String?
   restAdress   String?
   adressNum    String?
-  Company      Company[]
+  Company      Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId    Int?     @unique
 }
 
 // income model expend model 만들기
@@ -139,7 +139,8 @@ model InNout {
   totalAssets EquityLiabilities[] // 자산 및 부채
   budget      Int                 @default(0) // 예산
   inNoutDesc  IncomeExpend[]      @relation(name: "InEx") // budget의 토대
-  Company     Company[]
+  Company     Company?            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId   Int?                @unique
 }
 
 // Equity and Liabilities

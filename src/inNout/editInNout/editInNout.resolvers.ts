@@ -13,10 +13,10 @@ export default {
         const {
           id: existsCompany,
           companyManager,
-          inNoutId,
+          inNout,
         } = await client.company.findUnique({
           where: {id, companyManager: {some: {id: logginUser.id}}},
-          select: {id: true, companyManager: true, inNoutId: true},
+          select: {id: true, companyManager: true, inNout: true},
         });
         if (!existsCompany) {
           return {
@@ -33,7 +33,7 @@ export default {
           }
         });
         const updateInNout = await client.inNout.update({
-          where: {id: inNoutId},
+          where: {id: inNout.id},
           data: {
             accountName,
             accountNum,

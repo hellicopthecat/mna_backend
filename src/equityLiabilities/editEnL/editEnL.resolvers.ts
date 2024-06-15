@@ -20,7 +20,15 @@ export default {
         {logginUser}
       ) => {
         const existsAdmin = await client.company.findUnique({
-          where: {id, companyManager: {some: {id: logginUser.id}}},
+          where: {
+            id,
+            OR: [
+              {
+                companyManager: {some: {id: logginUser.id}},
+                companyOwner: {id: logginUser.id},
+              },
+            ],
+          },
         });
         if (!existsAdmin) {
           return {

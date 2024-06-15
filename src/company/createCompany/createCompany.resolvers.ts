@@ -17,8 +17,10 @@ export default {
                 "이미 같은 이름의 회사가 존재합니다. 회사명을 좀 더 바꿔보세요",
             };
           }
+
           const createCompanyAdress = await client.companyAdress.create({
             data: {
+              companyName,
               country: "",
               city: "",
               streetAdress: "",
@@ -27,18 +29,21 @@ export default {
             },
           });
           const createCompanyAssets = await client.inNout.create({
-            data: {accountName: companyName},
+            data: {
+              accountName: companyName,
+            },
           });
           const createCompany = await client.company.create({
             data: {
               companyName,
               companyOwner: {connect: {id: logginUser.id}},
-              companyAdress: {connect: {id: createCompanyAdress.id}},
               companyManager: {connect: {id: logginUser.id}},
               worker: {connect: {id: logginUser.id}},
+              companyAdress: {connect: {id: createCompanyAdress.id}},
               inNout: {connect: {id: createCompanyAssets.id}},
             },
           });
+
           if (!createCompany) {
             return {
               ok: false,

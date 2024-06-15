@@ -27,6 +27,7 @@ export default {
               {companyOwner: {id: logginUser.id}},
             ],
           },
+          include: {inNout: true},
         });
         if (!existsAdmin) {
           return {
@@ -49,10 +50,11 @@ export default {
             current,
             assests,
             value,
+            inNoutId: existsAdmin.inNout.id,
           },
         });
         const updateInNout = await client.inNout.update({
-          where: {id: existsAdmin.inNoutId},
+          where: {id: existsAdmin.inNout.id},
           data: {
             totalAssets: {connect: {id: createEnL.id}},
           },

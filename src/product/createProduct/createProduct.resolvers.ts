@@ -35,6 +35,7 @@ export default {
 
         const existsCompany = await client.company.findUnique({
           where: {id},
+          include: {inNout: true},
         });
         if (!existsCompany) {
           return {ok: false, errorMsg: "회사가 존재하지 않습니다."};
@@ -74,7 +75,7 @@ export default {
             data: {
               productItem: {connect: {id: createProduct.id}},
               InNout: {
-                connect: {id: existsCompany.inNoutId},
+                connect: {id: existsCompany.inNout.id},
                 update: {
                   budget: {
                     increment:
@@ -90,7 +91,7 @@ export default {
             data: {
               productItem: {connect: {id: createProduct.id}},
               InNout: {
-                connect: {id: existsCompany.inNoutId},
+                connect: {id: existsCompany.inNout.id},
                 update: {
                   budget: {
                     decrement:
@@ -106,7 +107,7 @@ export default {
             data: {
               productItem: {connect: {id: createProduct.id}},
               InNout: {
-                connect: {id: existsCompany.inNoutId},
+                connect: {id: existsCompany.inNout.id},
               },
             },
           });

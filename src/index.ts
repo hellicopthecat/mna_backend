@@ -20,7 +20,14 @@ const server = new ApolloServer({
 server.start().then(() => {
   app.use(
     "/graphql",
-    cors<cors.CorsRequest>({exposedHeaders: ["Apollo-Require-Preflight"]}),
+    cors<cors.CorsRequest>({
+      origin: [
+        "http://localhost:4000/graphql",
+        "http://localhost:8081",
+        "http://localhost:5173",
+      ],
+      exposedHeaders: ["Apollo-Require-Preflight"],
+    }),
     express.json(),
     morgan("tiny"),
     expressMiddleware(server, {

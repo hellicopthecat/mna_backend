@@ -9,4 +9,5 @@ type EquityLiabilities {
   current: Boolean!
   assests: Boolean!
   value: Int! # 자산값
+  inNoutId: Int!
 }
