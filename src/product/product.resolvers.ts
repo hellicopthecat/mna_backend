@@ -15,7 +15,8 @@ export default {
         where: {id},
         select: {incomeExpend: true},
       });
-      return incomeExpend[0];
+
+      return incomeExpend;
     },
     incomeExpendTypeId: async ({id}: Product) => {
       const {id: IETypeId} = await client.product.findUnique({

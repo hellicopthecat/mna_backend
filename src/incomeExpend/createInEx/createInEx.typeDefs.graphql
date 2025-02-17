@@ -1,6 +1,6 @@
 type Mutation {
   createInEx(
-    companyName: String!
+    id: Int!
     incomeTrue: Boolean!
     infoSubtitle: String!
     money: Int!

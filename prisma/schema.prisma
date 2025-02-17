@@ -113,20 +113,21 @@ model CompanyAdress {
 
 // income model expend model 만들기
 model Product {
-  id            Int            @id @default(autoincrement())
-  createdAt     DateTime       @default(now())
-  updateAt      DateTime       @updatedAt
-  company       Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  itemProductId String
-  itemName      String // 제품이름
-  itemModelName String? // 제품 모델명
-  itemPhoto     String?
-  itemType      String? // 제품 타입
-  itemCount     Int?
-  itemPrice     Int?
-  itemDesc      String?
-  incomeExpend  IncomeExpend[]
-  companyId     Int
+  id             Int          @id @default(autoincrement())
+  createdAt      DateTime     @default(now())
+  updateAt       DateTime     @updatedAt
+  company        Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  itemProductId  String
+  itemName       String // 제품이름
+  itemModelName  String? // 제품 모델명
+  itemPhoto      String?
+  itemType       String? // 제품 타입
+  itemCount      Int?
+  itemPrice      Int?
+  itemDesc       String?
+  incomeExpend   IncomeExpend @relation(name: "Product", fields: [incomeExpendId], references: [id], onDelete: Cascade)
+  companyId      Int
+  incomeExpendId Int          @unique
 }
 
 model InNout {
@@ -169,7 +170,7 @@ model IncomeExpend {
   id           Int            @id @default(autoincrement())
   createdAt    DateTime       @default(now())
   updateAt     DateTime       @updatedAt
-  productItem  Product?       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productItem  Product?       @relation(name: "Product")
   incomeTrue   Boolean?       @default(true) //수입지출타입
   infoSubtitle String         @unique
   money        Int? // 수익지출금
@@ -180,5 +181,4 @@ model IncomeExpend {
   paymentsDone TPaymentSwitch @default(WAIT) // 결제완료
   InNout       InNout?        @relation(name: "InEx", fields: [inNoutId], references: [id], onDelete: Cascade)
   inNoutId     Int?
-  productId    Int?
 }

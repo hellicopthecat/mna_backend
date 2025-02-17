@@ -1,7 +1,7 @@
 type Mutation {
   createVacation(
-    id: Int!
-    username: String!
+    userId: Int!
+    companyId: Int!
     other: Int
     joinCompanyDate: String
   ): ResultResponse!

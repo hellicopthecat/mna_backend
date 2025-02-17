@@ -2,16 +2,24 @@ import {Company, User, Vacation} from "@prisma/client";
 import {protectResolver} from "../../user/user.util";
 import client from "../../prismaClient";
 import {annualCalculator} from "../vacation.util";
-
+interface ICreateVacationProps {
+  userId: number;
+  companyId: number;
+}
 export default {
   Mutation: {
     createVacation: protectResolver(
       async (
         _,
-        {username, id, other, joinCompanyDate}: User & Company & Vacation,
+        {
+          userId,
+          companyId,
+          other,
+          joinCompanyDate,
+        }: ICreateVacationProps & Vacation,
         {logginUser}
       ) => {
-        const existsUser = await client.user.findFirst({where: {username}});
+        const existsUser = await client.user.findFirst({where: {id: userId}});
         if (!existsUser) {
           return {
             ok: false,
@@ -19,7 +27,7 @@ export default {
           };
         }
         const checkAdmin = await client.company.findFirst({
-          where: {id, companyManager: {some: {id: logginUser.id}}},
+          where: {id: companyId, companyManager: {some: {id: logginUser.id}}},
         });
         if (!checkAdmin) {
           return {
@@ -28,7 +36,7 @@ export default {
           };
         }
         const existsVacation = await client.vacation.findFirst({
-          where: {user: {username}, company: {id}},
+          where: {user: {id: userId}, company: {id: companyId}},
         });
         if (existsVacation) {
           return {

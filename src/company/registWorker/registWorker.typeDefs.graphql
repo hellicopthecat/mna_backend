@@ -1,3 +1,9 @@
 type Mutation {
-  registWorker(username: String!, id: Int!): ResultResponse!
+  registWorker(
+    id: Int!
+    username: String!
+    preTaxMonthlySalary: Int!
+    familyCount: Int!
+    childCount: Int!
+  ): ResultResponse!
 }

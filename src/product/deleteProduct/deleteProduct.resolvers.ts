@@ -27,7 +27,10 @@ export default {
         const removeProduct = await client.product.delete({
           where: {id: productId, company: {id: companyId}},
         });
-        if (!removeProduct) {
+        const removeInEx = await client.incomeExpend.delete({
+          where: {id: existsProduct.incomeExpendId},
+        });
+        if (!removeProduct && !removeInEx) {
           return {
             ok: false,
             errorMsg: "상품을 제거하는데 실패했습니다.",

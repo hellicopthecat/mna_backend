@@ -83,13 +83,14 @@ export default {
       return connectingCompany.length;
     },
     companyProduct: async ({id}: Company) => {
-      const product = await client.company.findUnique({
+      const {companyProduct} = await client.company.findUnique({
         where: {id},
         select: {
           companyProduct: {skip: 0, take: 10, orderBy: {createdAt: "desc"}},
         },
       });
-      return product.companyProduct;
+
+      return companyProduct;
     },
     inNout: async ({id}: Company) => {
       const {inNout} = await client.company.findUnique({
@@ -102,13 +103,15 @@ export default {
       const {worker} = await client.company.findFirst({
         where: {id},
         select: {
-          worker: {include: {vacation: {where: {companyId: id}}}},
+          worker: {
+            include: {
+              vacation: {where: {companyId: id}},
+              salary: {where: {companyId: id}},
+            },
+          },
         },
       });
-      const workers = worker.filter((items) =>
-        items.vacation.filter((item) => item.companyId === id)
-      );
-      return workers;
+      return worker;
     },
     workerVacation: async ({id}: Company) => {
       const {Vacation} = await client.company.findUnique({
@@ -123,7 +126,8 @@ export default {
         where: {id},
         select: {Salary: true},
       });
-      return Salary;
+      const salary = Salary.filter((item) => item.companyId === id);
+      return salary;
     },
   },
 } as Resolvers;

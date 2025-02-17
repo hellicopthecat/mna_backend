@@ -63,6 +63,7 @@ export default {
             itemPrice,
             itemDesc,
             company: {connect: {id}},
+            incomeExpend: {connect: {id: createIncomeExpend.id}},
           },
         });
         let updateIncomeExpend: any;
@@ -134,6 +135,7 @@ export default {
         return {
           ok: true,
           id: createProduct.id,
+          subId: createIncomeExpend.id,
         };
       }
     ),

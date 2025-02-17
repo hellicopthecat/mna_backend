@@ -11,7 +11,8 @@ type Product {
   itemPrice: Int
   itemDesc: String
   company: Company!
-  incomeExpend: IncomeExpend!
-  incomeExpendTypeId: Int!
+  incomeExpend: IncomeExpend
+  incomeExpendTypeId: Int
   companyId: Int!
+  incomeExpendId: Int
 }

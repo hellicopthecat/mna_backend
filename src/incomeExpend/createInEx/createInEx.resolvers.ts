@@ -8,7 +8,7 @@ export default {
       async (
         _,
         {
-          companyName,
+          id,
           incomeTrue,
           infoSubtitle,
           money,
@@ -26,7 +26,7 @@ export default {
         {logginUser}
       ) => {
         const existsCompany = await client.company.findUnique({
-          where: {companyName, companyManager: {some: {id: logginUser.id}}},
+          where: {id, companyManager: {some: {id: logginUser.id}}},
           include: {inNout: true},
         });
         if (!existsCompany) {
@@ -70,11 +70,10 @@ export default {
           },
         });
 
-        let updateBudget: any;
         const income = incomeTrue && paymentsDone === "PAID";
         const expend = !incomeTrue && paymentsDone === "PAID";
         if (income) {
-          updateBudget = await client.inNout.update({
+          await client.inNout.update({
             where: {id: createInEx.inNoutId},
             data: {
               budget: {
@@ -83,7 +82,7 @@ export default {
             },
           });
         } else if (expend) {
-          updateBudget = await client.inNout.update({
+          await client.inNout.update({
             where: {id: createInEx.inNoutId},
             data: {
               budget: {
@@ -95,7 +94,7 @@ export default {
 
         const CREATE = createInEx && createEnL;
 
-        if (!CREATE || !updateBudget) {
+        if (!CREATE) {
           return {
             ok: false,
             errorMsg: "수입지출모델을 만드는데 실패했습니다.",
@@ -103,6 +102,8 @@ export default {
         }
         return {
           ok: true,
+          id: createInEx.id,
+          subId: createEnL.id,
         };
       }
     ),

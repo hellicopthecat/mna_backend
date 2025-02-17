@@ -1,22 +1,25 @@
-import {Company, Salary, User} from "@prisma/client";
+import {Salary} from "@prisma/client";
 import {protectResolver} from "../../user/user.util";
 import client from "../../prismaClient";
-
+interface IEditSalaryProps {
+  userId: number;
+  companyId: number;
+}
 export default {
   Mutation: {
     editSalary: protectResolver(
       async (
         _,
         {
-          id,
-          companyName,
+          userId,
+          companyId,
           preTaxMonthlySalary,
           familyCount,
           childCount,
-        }: User & Company & Salary,
+        }: IEditSalaryProps & Salary,
         {logginUser}
       ) => {
-        const existsUser = await client.user.findFirst({where: {id}});
+        const existsUser = await client.user.findFirst({where: {id: userId}});
         if (!existsUser) {
           return {
             ok: false,
@@ -24,7 +27,7 @@ export default {
           };
         }
         const checkAdmin = await client.company.findFirst({
-          where: {companyName, companyManager: {some: {id: logginUser.id}}},
+          where: {id: companyId, companyManager: {some: {id: logginUser.id}}},
         });
         if (!checkAdmin) {
           return {

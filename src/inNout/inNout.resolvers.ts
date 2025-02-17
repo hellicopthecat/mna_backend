@@ -199,7 +199,8 @@ export default {
       const totalRevenue = reduceAssets(revenueValue);
       const netIncome = reduceAssets(revenueValue) - reduceAssets(expenseValue);
 
-      return !(netIncome / totalRevenue)
+      return netIncome / totalRevenue === -Infinity ||
+        !(netIncome / totalRevenue)
         ? 0
         : ((netIncome / totalRevenue) * 100).toFixed(4);
     }, // 이익률
@@ -259,7 +260,7 @@ export default {
     incomeModel: async ({id}: InNout) => {
       const {inNoutDesc} = await client.inNout.findUnique({
         where: {id},
-        select: {inNoutDesc: true},
+        select: {inNoutDesc: {orderBy: {createdAt: "desc"}}},
       });
       const income = inNoutDesc.filter(
         (item) => item.incomeTrue && item.paymentsDone === "PAID"
@@ -285,7 +286,7 @@ export default {
     expendModel: async ({id}: InNout) => {
       const {inNoutDesc} = await client.inNout.findUnique({
         where: {id},
-        select: {inNoutDesc: true},
+        select: {inNoutDesc: {orderBy: {createdAt: "desc"}}},
       });
       const expend = inNoutDesc.filter(
         (item) => !item.incomeTrue && item.paymentsDone === "PAID"

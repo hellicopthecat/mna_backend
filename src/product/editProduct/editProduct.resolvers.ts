@@ -59,7 +59,7 @@ export default {
             itemDesc,
             incomeExpend: {
               update: {
-                where: {infoSubtitle: itemProductId, productId: id},
+                where: {infoSubtitle: itemProductId},
                 data: {
                   money: itemCount <= 0 ? 1 * itemPrice : itemCount * itemPrice,
                   incomeTrue,
@@ -76,6 +76,7 @@ export default {
         if (updateProduct) {
           return {
             ok: true,
+            id: updateProduct.incomeExpendId,
           };
         } else {
           return {
